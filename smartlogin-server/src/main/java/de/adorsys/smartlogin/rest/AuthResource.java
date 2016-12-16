@@ -1,20 +1,30 @@
 package de.adorsys.smartlogin.rest;
 
-import de.adorsys.smartlogin.service.*;
-import org.jboss.resteasy.spi.ResteasyProviderFactory;
+import java.io.File;
+import java.io.IOException;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.io.File;
-import java.io.IOException;
+
+import de.adorsys.smartlogin.service.SqrlAuthException;
+import de.adorsys.smartlogin.service.SqrlAuthenticationPreparationData;
+import de.adorsys.smartlogin.service.SqrlAuthenticationService;
+import de.adorsys.smartlogin.service.SqrlResponse;
+import de.adorsys.smartlogin.service.SqrlWebApplicationService;
 
 /**
  * Created by alexg on 07.12.16.
@@ -38,8 +48,7 @@ public class AuthResource {
     @GET
     @Path("/sqrl-qr-code")
     @Produces("image/png")
-    public Response createQrCode(@QueryParam("nut") String nut, @Context UriInfo uriInfo) throws IOException {
-        HttpServletResponse response = ResteasyProviderFactory.getContextData(HttpServletResponse.class);
+    public Response createQrCode(@QueryParam("nut") String nut, @Context UriInfo uriInfo, @Context HttpServletResponse response) throws IOException {
         File qr = sqrlService.createQrCode(nut, uriInfo, response);
 
         String mt = new MimetypesFileTypeMap().getContentType(qr);
@@ -81,10 +90,7 @@ public class AuthResource {
     @POST
     @Path("/sqrl")
     @Consumes("application/x-www-form-urlencoded")
-    public void handleSqrlRequest() throws SqrlAuthException {
-        HttpServletRequest srequest = ResteasyProviderFactory.getContextData(HttpServletRequest.class);
-        HttpServletResponse response = ResteasyProviderFactory.getContextData(HttpServletResponse.class);
-
-        sqrlAuthenticationService.handleSqrlRequest(srequest, response);
+    public void handleSqrlRequest(@Context HttpServletRequest request, @Context HttpServletResponse response) throws SqrlAuthException {
+        sqrlAuthenticationService.handleSqrlRequest(request, response);
     }
 }

@@ -1,4 +1,4 @@
-package de.adorsys.smartlogin.service;;
+package de.adorsys.smartlogin.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
