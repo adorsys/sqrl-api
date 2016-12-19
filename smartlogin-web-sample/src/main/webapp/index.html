@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <meta name="description" content="SQRL Sample Web-Client">
+    <title>SQRL Sample Web-Client</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+    <!-- libs -->
+    <script src="assets/lib/angular/angular.js"></script>
+    <script src="assets/lib/angular-ui-router/release/angular-ui-router.min.js"></script>
+
+    <!--app's js -->
+    <script src="app/app.js"></script>
+    <script src="app/states.js"></script>
+    <script src="app/components/home/homeCtrl.js"></script>
+
+    <!--sqrl -->
+    <script src="app/shared/sqrl/SQRLLoginService.js"></script>
+    <script src="app/shared/sqrl/SQRLManagementService.js"></script>
+
+</head>
+<body ng-app="sqrl.web">
+<div class="container bs-docs-container">
+    <div class="row">
+        <ui-view></ui-view>
+    </div>
+</div>
+</body>
+</html>
