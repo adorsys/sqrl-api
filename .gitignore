@@ -1,1 +1,6 @@
 smartlogin-server/target
+.idea/
+*.tmp
+.DS_Store
+.classpath
+*.iml

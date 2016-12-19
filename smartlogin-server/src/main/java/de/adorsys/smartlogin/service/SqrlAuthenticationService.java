@@ -1,17 +1,5 @@
 package de.adorsys.smartlogin.service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.Response;
-
 import de.adorsys.smartlogin.provider.AccountProvider;
 import net.vrallev.java.sqrl.SqrlException;
 import net.vrallev.java.sqrl.SqrlProtocol;
@@ -19,9 +7,19 @@ import net.vrallev.java.sqrl.body.ServerParameter;
 import net.vrallev.java.sqrl.body.SqrlClientBody;
 import net.vrallev.java.sqrl.body.SqrlClientBodyParser;
 import net.vrallev.java.sqrl.body.SqrlServerBody;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The SQRL client's interface to the SQRL auth.<br>
@@ -252,28 +250,23 @@ public class SqrlAuthenticationService {
             SqrlProcessData processData = cache.fetch(nut);
 
             //TODO
-//            ApplicationClient client = getApplicationClient(processData.getPreparedData().findValue(PREPARED_FIELD_CLIENT_ID));
-//            if (client != null && accountId != null) {
-//                Token accessToken = CreateAndStoreTokenTask.createAndStoreToken(TokenType.REQUEST, accountId, client, "", services.getTokenRepository());
-//                // TODO - should we provide this to allow remembered login for
-//                // SQRL Auth?
-//                // Token refreshToken =
-//                // CreateAndStoreTokenTask.createAndStoreToken(TokenType.REFRESH,
-//                // accountId, client, "", services.getTokenRepository());
-//
-//                SqrlResponse sqrlResponse = new SqrlResponse(accessToken.getTokenId(), client.getExpirationDuration());
-//
-//                processData.setResponse(sqrlResponse);
-//                cache.cache(nut, processData);
-//
-//                stateCollector.add(SqrlState.LOGIN_SUCCEEDED);
-//
-//                return SqrlProtocol.instance()
-//                        .answerClient(clientBody, ServerParameter.ID_MATCH, ServerParameter.USER_LOGGED_IN)
-//                        .withServerFriendlyName(FRIENDLY_SERVER_NAME).withStoredKeys(storedServerUnlockKey, storedVerifyUnlockKey).create().asSqrlServerBody();
-//            } else {
-//                LOG.error("Could not retrieve valid application client or provided identity key was not found");
-//            }
+            if (client != null && accountId != null) {
+
+                // TODO We'd return a signed JWT here with a low validity
+                long expireSoon = 1000;
+                SqrlResponse sqrlResponse = new SqrlResponse(accessToken.getTokenId(), expireSoon);
+
+                processData.setResponse(sqrlResponse);
+                cache.cache(nut, processData);
+
+                stateCollector.add(SqrlState.LOGIN_SUCCEEDED);
+
+                return SqrlProtocol.instance()
+                        .answerClient(clientBody, ServerParameter.ID_MATCH, ServerParameter.USER_LOGGED_IN)
+                        .withServerFriendlyName(FRIENDLY_SERVER_NAME).withStoredKeys(storedServerUnlockKey, storedVerifyUnlockKey).create().asSqrlServerBody();
+            } else {
+                LOG.error("Could not retrieve valid application client or provided identity key was not found");
+            }
         } else {
             //if user id is known, we have preparation to create account
             LOG.warn("Default login not accepted, but detecting account creation prepared");

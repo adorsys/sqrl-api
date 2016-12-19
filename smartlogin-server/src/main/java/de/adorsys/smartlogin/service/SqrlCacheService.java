@@ -1,5 +1,7 @@
 package de.adorsys.smartlogin.service;
 
+import de.adorsys.smartlogin.provider.SQRLProvider;
+
 import java.util.Map;
 
 import javax.ejb.Singleton;
@@ -10,7 +12,7 @@ import javax.ws.rs.core.Response;
 /**
  * Serves a bridge within the server to cache data from the clients (Web, SQRL)
  * and provide it to each other.
- * 
+ *
  * @author mko
  */
 
@@ -19,7 +21,7 @@ import javax.ws.rs.core.Response;
 public class SqrlCacheService {
 
 	@Inject
-	private SQRLCache sqrlCache;
+	private SQRLProvider sqrlRepository;
 
 	public SqrlCacheService() {
 	}
@@ -35,7 +37,7 @@ public class SqrlCacheService {
 		if (nut == null) {
 			return false;
 		}
-		return sqrlCache.checkNutExists(nut);
+		return sqrlRepository.checkNutExists(nut);
 	}
 
 	/**
@@ -49,21 +51,21 @@ public class SqrlCacheService {
 	    if(nut == null || processData == null){
 	        throw new SqrlAuthException(Response.serverError().entity("Inavlid null arg 'nut' or 'processData'").build() );
 	    }
-	    
+
 		if (!this.existsProcessDataFor(nut)) {
-			sqrlCache.create(nut,
+			sqrlRepository.create(nut,
 					processData.getState().ordinal());
 		} else {
-			sqrlCache.updateState(nut,
+			sqrlRepository.updateState(nut,
 					processData.getState().ordinal());
 		}
 
 		if (processData.getPreparedData() != null && processData.getPreparedData().getData() != null) {
-			sqrlCache.updatePreparationData(nut,
+			sqrlRepository.updatePreparationData(nut,
 					processData.getPreparedData().getData());
 		}
 		if (processData.getResponse() != null) {
-			sqrlCache.updateResponseData(nut,
+			sqrlRepository.updateResponseData(nut,
 					processData.getResponse().asMap());
 		}
 		return;
@@ -80,10 +82,10 @@ public class SqrlCacheService {
 	public SqrlProcessData fetch(String nut) {
 		if (existsProcessDataFor(nut)) {
 
-			int state = sqrlCache.findState(nut);
-			Map<String, String> prep = sqrlCache
+			int state = sqrlRepository.findState(nut);
+			Map<String, String> prep = sqrlRepository
 					.findPreparationData(nut);
-			Map<String, String> resp = sqrlCache
+			Map<String, String> resp = sqrlRepository
 					.findResponseData(nut);
 
 			SqrlProcessData d = new SqrlProcessData();
@@ -109,7 +111,7 @@ public class SqrlCacheService {
 	 *            the nut
 	 */
 	public void drop(String nut) {
-		sqrlCache.drop(nut);
+		sqrlRepository.drop(nut);
 	}
 
 }
