@@ -34,16 +34,6 @@ public class SqrlUtil {
     }
 
     /**
-     * Wrapper for @see SqrlUtil.buildSqrlUrl(nut, srequest) to provide later parameter inclusion.
-     */
-    public static String createSqrlUrl(UriInfo uriInfo, String nut) {
-
-        String sqrlUrl = SqrlUtil.buildSqrlUrl(nut, uriInfo);
-
-        return sqrlUrl;
-    }
-
-    /**
      * Add sqrl-uri and qr data as attributes to given HttpServletRequest.
      *
      * @param srequest
@@ -75,10 +65,10 @@ public class SqrlUtil {
      * Builds the sqrl url containing the nut.
      * Example: "qrl://192.168.178.49:8080/bouncer.server/rest/auth/sqrl?nut=znLEgS5BT6m2qwC8IPmsPITKaqc"
      */
-    private static String buildSqrlUrl(String nut, UriInfo uriInfo) {
+    public static String buildSqrlUrl(String nut, UriInfo uriInfo) {
         String protocol = uriInfo.getRequestUri().getScheme().equals("https") ? "sqrl" : "qrl";
         return UrlUtils
-                .publicUriBuilder(uriInfo).scheme(protocol).replacePath("/bouncer.server/rest/auth/sqrl").queryParam("nut", nut).build().toString();
+                .publicUriBuilder().scheme(protocol).replacePath("/smartlogin-server/rest/auth/sqrl").queryParam("nut", nut).build().toString();
     }
 
     /**

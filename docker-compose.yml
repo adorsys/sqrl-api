@@ -1,0 +1,15 @@
+version: '2'
+services:   
+    wildfly:
+        image: jboss/wildfly
+        ports:
+            - "8080:8080"
+            - "9990:9990"
+            - "8787:8787"
+        environment:
+            JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8787
+            SQRL_PUBLIC_BASE_URL: http://172.26.0.18:8080
+        command:
+            /bin/bash -c "/opt/jboss/wildfly/bin/add-user.sh admin admin123 --silent; 
+            /opt/jboss/wildfly/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0"
+            

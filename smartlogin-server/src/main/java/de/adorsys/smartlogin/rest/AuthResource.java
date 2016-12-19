@@ -40,6 +40,7 @@ public class AuthResource {
     private SqrlAuthenticationService sqrlAuthenticationService;
 
     @GET
+    @Produces("text/plain")
     @Path("/sqrl-uri")
     public String createSqrlUri(@Context UriInfo uriInfo) {
         return sqrlService.initCreateSqrlUrl(uriInfo);
@@ -49,10 +50,7 @@ public class AuthResource {
     @Path("/sqrl-qr-code")
     @Produces("image/png")
     public Response createQrCode(@QueryParam("nut") String nut, @Context UriInfo uriInfo, @Context HttpServletResponse response) throws IOException {
-        File qr = sqrlService.createQrCode(nut, uriInfo, response);
-
-        String mt = new MimetypesFileTypeMap().getContentType(qr);
-        return Response.ok(qr, mt).build();
+        return Response.ok(sqrlService.createQrCode(nut, uriInfo)).build();
     }
 
     @POST

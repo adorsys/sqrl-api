@@ -54,7 +54,7 @@ public class SqrlWebApplicationService {
     public String initCreateSqrlUrl(UriInfo uriInfo) {
         SqrlProcessData sqrlProcessData = SqrlUtil.createSqrlProcessData();
         String nut = sqrlProcessData.getNut();
-        String result = SqrlUtil.createSqrlUrl(uriInfo, nut);
+        String result = SqrlUtil.buildSqrlUrl(nut, uriInfo);
         cache.cache(sqrlProcessData.getNut(), sqrlProcessData);
         return result;
     }
@@ -62,12 +62,9 @@ public class SqrlWebApplicationService {
     /**
      * Creates a qr-code png representing the sqrl-url.
      */
-    public File createQrCode(String nut, UriInfo uriInfo, HttpServletResponse response) throws IOException {
+    public byte[] createQrCode(String nut, UriInfo uriInfo) throws IOException {
         QRCode qr = SqrlUtil.createQrCodeImage(uriInfo, nut);
-        File file = qr.file();
-        response.setContentType("image/png");
-        response.setContentLength((int) file.getTotalSpace());
-        return file;
+        return qr.stream().toByteArray();
     }
 
     /**

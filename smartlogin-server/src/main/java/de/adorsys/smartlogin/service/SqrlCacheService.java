@@ -1,11 +1,12 @@
 package de.adorsys.smartlogin.service;
 
-import java.util.Map;
+import de.adorsys.smartlogin.provider.SqrlCacheProvider;
 
 import javax.ejb.Singleton;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
+import java.util.Map;
 
 /**
  * Serves a bridge within the server to cache data from the clients (Web, SQRL)
@@ -19,7 +20,7 @@ import javax.ws.rs.core.Response;
 public class SqrlCacheService {
 
 	@Inject
-	private SQRLCache sqrlCache;
+	private SqrlCacheProvider sqrlCache;
 
 	public SqrlCacheService() {
 	}
