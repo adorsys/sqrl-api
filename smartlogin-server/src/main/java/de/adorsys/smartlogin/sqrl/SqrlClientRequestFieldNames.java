@@ -1,4 +1,4 @@
-package de.adorsys.smartlogin.service;
+package de.adorsys.smartlogin.sqrl;
 
 /**
  * Possible SQRL client request field names.

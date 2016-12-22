@@ -1,4 +1,4 @@
-package de.adorsys.smartlogin.provider;
+package de.adorsys.smartlogin.spi;
 
 import java.util.Map;
 

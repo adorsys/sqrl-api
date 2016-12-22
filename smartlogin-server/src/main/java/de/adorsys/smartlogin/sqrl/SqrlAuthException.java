@@ -1,4 +1,4 @@
-package de.adorsys.smartlogin.service;
+package de.adorsys.smartlogin.sqrl;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;

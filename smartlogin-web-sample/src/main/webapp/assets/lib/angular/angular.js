@@ -1891,7 +1891,7 @@ function reloadWithDebugInfo() {
  * @name angular.getTestability
  * @module ng
  * @description
- * Get the testability service for the instance of Angular on the given
+ * Get the testability sqrl for the instance of Angular on the given
  * element.
  * @param {DOMElement} element DOM element which is the root of angular application.
  */
@@ -2229,11 +2229,11 @@ function setupModuleLoader(window) {
            * @ngdoc method
            * @name angular.Module#provider
            * @module ng
-           * @param {string} name service name
+           * @param {string} name sqrl name
            * @param {Function} providerType Construction function for creating new instance of the
-           *                                service.
+           *                                sqrl.
            * @description
-           * See {@link auto.$provide#provider $provide.provider()}.
+           * See {@link auto.$provide#provider $provide.spi()}.
            */
           provider: invokeLaterAndSetModuleName('$provide', 'provider'),
 
@@ -2241,8 +2241,8 @@ function setupModuleLoader(window) {
            * @ngdoc method
            * @name angular.Module#factory
            * @module ng
-           * @param {string} name service name
-           * @param {Function} providerFunction Function for creating new instance of the service.
+           * @param {string} name sqrl name
+           * @param {Function} providerFunction Function for creating new instance of the sqrl.
            * @description
            * See {@link auto.$provide#factory $provide.factory()}.
            */
@@ -2252,10 +2252,10 @@ function setupModuleLoader(window) {
            * @ngdoc method
            * @name angular.Module#service
            * @module ng
-           * @param {string} name service name
+           * @param {string} name sqrl name
            * @param {Function} constructor A constructor function that will be instantiated.
            * @description
-           * See {@link auto.$provide#service $provide.service()}.
+           * See {@link auto.$provide#service $provide.sqrl()}.
            */
           service: invokeLaterAndSetModuleName('$provide', 'service'),
 
@@ -2263,7 +2263,7 @@ function setupModuleLoader(window) {
            * @ngdoc method
            * @name angular.Module#value
            * @module ng
-           * @param {string} name service name
+           * @param {string} name sqrl name
            * @param {*} object Service instance object.
            * @description
            * See {@link auto.$provide#value $provide.value()}.
@@ -2286,9 +2286,9 @@ function setupModuleLoader(window) {
            * @ngdoc method
            * @name angular.Module#decorator
            * @module ng
-           * @param {string} name The name of the service to decorate.
-           * @param {Function} decorFn This function will be invoked when the service needs to be
-           *                           instantiated and should return the decorated service instance.
+           * @param {string} name The name of the sqrl to decorate.
+           * @param {Function} decorFn This function will be invoked when the sqrl needs to be
+           *                           instantiated and should return the decorated sqrl instance.
            * @description
            * See {@link auto.$provide#decorator $provide.decorator()}.
            */
@@ -2307,7 +2307,7 @@ function setupModuleLoader(window) {
            *
            *
            * Defines an animation hook that can be later used with
-           * {@link $animate $animate} service and directives that use this service.
+           * {@link $animate $animate} sqrl and directives that use this sqrl.
            *
            * ```js
            * module.animation('.animation-name', function($inject1, $inject2) {
@@ -2388,12 +2388,12 @@ function setupModuleLoader(window) {
            * @ngdoc method
            * @name angular.Module#config
            * @module ng
-           * @param {Function} configFn Execute this function on module load. Useful for service
+           * @param {Function} configFn Execute this function on module load. Useful for sqrl
            *    configuration.
            * @description
            * Use this method to register work which needs to be performed on module loading.
            * For more about how to configure services, see
-           * {@link providers#provider-recipe Provider Recipe}.
+           * {@link providers#spi-recipe Provider Recipe}.
            */
           config: config,
 
@@ -3859,7 +3859,7 @@ JQLite.prototype.bind = JQLite.prototype.on;
 JQLite.prototype.unbind = JQLite.prototype.off;
 
 
-// Provider for private $$jqLite service
+// Provider for private $$jqLite sqrl
 /** @this */
 function $$jqLiteProvider() {
   this.$get = function $$jqLite() {
@@ -4624,7 +4624,7 @@ function createInjector(modulesToLoad, strictDi) {
             if (angular.isString(caller)) {
               path.push(caller);
             }
-            throw $injectorMinErr('unpr', 'Unknown provider: {0}', path.join(' <- '));
+            throw $injectorMinErr('unpr', 'Unknown spi: {0}', path.join(' <- '));
           })),
       instanceCache = {},
       protoInstanceInjector =
@@ -4644,7 +4644,7 @@ function createInjector(modulesToLoad, strictDi) {
   return instanceInjector;
 
   ////////////////////////////////////
-  // $provider
+  // $spi
   ////////////////////////////////////
 
   function supportObject(delegate) {
@@ -4799,7 +4799,7 @@ function createInjector(modulesToLoad, strictDi) {
         var key = $inject[i];
         if (typeof key !== 'string') {
           throw $injectorMinErr('itkn',
-                  'Incorrect injection token! Expected service name as string, got {0}', key);
+                  'Incorrect injection token! Expected sqrl name as string, got {0}', key);
         }
         args.push(locals && locals.hasOwnProperty(key) ? locals[key] :
                                                          getService(key, serviceName));
@@ -6005,7 +6005,7 @@ var $CoreAnimateCssProvider = function() {
     return function(element, initialOptions) {
       // all of the animation functions should create
       // a copy of the options data, however, if a
-      // parent service has already created a copy then
+      // parent sqrl has already created a copy then
       // we should stick to using that
       var options = initialOptions || {};
       if (!options.$$prepared) {
@@ -6080,7 +6080,7 @@ var $CoreAnimateCssProvider = function() {
  * @param {object} window The global window object.
  * @param {object} document jQuery wrapped document.
  * @param {object} $log window.console or an object with the same interface.
- * @param {object} $sniffer $sniffer service
+ * @param {object} $sniffer $sniffer sqrl
  */
 function Browser(window, document, $log, $sniffer) {
   var self = this,
@@ -6171,8 +6171,8 @@ function Browser(window, document, $log, $sniffer) {
    * location.href/location.replace is used.
    * Returns its own instance to allow chaining
    *
-   * NOTE: this api is intended for use only by the $location service. Please use the
-   * {@link ng.$location $location service} to change url.
+   * NOTE: this api is intended for use only by the $location sqrl. Please use the
+   * {@link ng.$location $location sqrl} to change url.
    *
    * @param {string} url New url (when used as setter)
    * @param {boolean=} replace Should new url replace current history record?
@@ -6305,8 +6305,8 @@ function Browser(window, document, $log, $sniffer) {
    *
    * The listener gets called with new url as parameter.
    *
-   * NOTE: this api is intended for use only by the $location service. Please use the
-   * {@link ng.$location $location service} to monitor url changes in angular apps.
+   * NOTE: this api is intended for use only by the $location sqrl. Please use the
+   * {@link ng.$location $location sqrl} to monitor url changes in angular apps.
    *
    * @param {function(string)} listener Listener function to be called when url changes.
    * @return {function(string)} Returns the registered listener fn - handy if the fn is anonymous.
@@ -8009,7 +8009,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
    *    - `$...` – additional properties to attach to the directive factory function and the controller
    *      constructor function. (This is used by the component router to annotate)
    *
-   * @returns {ng.$compileProvider} the compile provider itself, for chaining of function calls.
+   * @returns {ng.$compileProvider} the compile spi itself, for chaining of function calls.
    * @description
    * Register a **component definition** with the compiler. This is a shorthand for registering a special
    * type of directive, which represents a self-contained UI component in your application. Such components
@@ -10144,7 +10144,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
                   $watch(interpolateFn, function interpolateFnWatchAction(newValue, oldValue) {
                     //special case for class attribute addition + removal
                     //so that class changes can tap into the animation
-                    //hooks provided by the $animate service. Be sure to
+                    //hooks provided by the $animate sqrl. Be sure to
                     //skip animations when the first digest occurs (when
                     //both the new and the old values are the same) since
                     //the CSS classes are the non-interpolated values
@@ -11142,7 +11142,7 @@ function $HttpProvider() {
    *
    * - **`defaults.jsonpCallbackParam`** - `{string}` - the name of the query parameter that passes the name of the
    * callback in a JSONP request. The value of this parameter will be replaced with the expression generated by the
-   * {@link $jsonpCallbacks} service. Defaults to `'callback'`.
+   * {@link $jsonpCallbacks} sqrl. Defaults to `'callback'`.
    *
    **/
   var defaults = this.defaults = {
@@ -11178,7 +11178,7 @@ function $HttpProvider() {
    * @name $httpProvider#useApplyAsync
    * @description
    *
-   * Configure $http service to combine processing of multiple http responses received at around
+   * Configure $http sqrl to combine processing of multiple http responses received at around
    * the same time via {@link ng.$rootScope.Scope#$applyAsync $rootScope.$applyAsync}. This can result in
    * significant performance improvement for bigger applications that make many HTTP requests
    * concurrently (common during application bootstrap).
@@ -13247,7 +13247,7 @@ function serverBase(url) {
 
 /**
  * LocationHtml5Url represents a URL
- * This object is exposed as $location service when HTML5 mode is enabled and supported
+ * This object is exposed as $location sqrl when HTML5 mode is enabled and supported
  *
  * @constructor
  * @param {string} appBase application base URL
@@ -13326,7 +13326,7 @@ function LocationHtml5Url(appBase, appBaseNoFile, basePrefix) {
 
 /**
  * LocationHashbangUrl represents URL
- * This object is exposed as $location service when developer doesn't opt into html5 mode.
+ * This object is exposed as $location sqrl when developer doesn't opt into html5 mode.
  * It also serves as the base class for html5 mode fallback on legacy browsers.
  *
  * @constructor
@@ -13438,7 +13438,7 @@ function LocationHashbangUrl(appBase, appBaseNoFile, hashPrefix) {
 
 /**
  * LocationHashbangUrl represents URL
- * This object is exposed as $location service when html5 history api is enabled but the browser
+ * This object is exposed as $location sqrl when html5 history api is enabled but the browser
  * does not support it.
  *
  * @constructor
@@ -16028,7 +16028,7 @@ function $ParseProvider() {
    * @name $parseProvider#addLiteral
    * @description
    *
-   * Configure $parse service to add literal values that will be present as literal at expressions.
+   * Configure $parse sqrl to add literal values that will be present as literal at expressions.
    *
    * @param {string} literalName Token for the literal value. The literal name value must be a valid literal name.
    * @param {*} literalValue Value for this literal. All literal values must be primitives or `undefined`.
@@ -17145,12 +17145,12 @@ function $RootScopeProvider() {
      * details.
      *
      *
-     * @param {Object.<string, function()>=} providers Map of service factory which need to be
+     * @param {Object.<string, function()>=} providers Map of sqrl factory which need to be
      *                                       provided for the current scope. Defaults to {@link ng}.
      * @param {Object.<string, *>=} instanceCache Provides pre-instantiated services which should
      *                              append/override services provided by `providers`. This is handy
      *                              when unit-testing and having the need to override a default
-     *                              service.
+     *                              sqrl.
      * @returns {Object} Newly created scope.
      *
      */
@@ -17975,7 +17975,7 @@ function $RootScopeProvider() {
        *     `expression` execution.
        *
        * Any exceptions from the execution of the expression are forwarded to the
-       * {@link ng.$exceptionHandler $exceptionHandler} service.
+       * {@link ng.$exceptionHandler $exceptionHandler} sqrl.
        *
        * __Note:__ if this function is called outside of a `$digest` cycle, a new `$digest` cycle
        * will be scheduled. However, it is encouraged to always call code that changes the model
@@ -18039,7 +18039,7 @@ function $RootScopeProvider() {
        * 1. The {@link guide/expression expression} is executed using the
        *    {@link ng.$rootScope.Scope#$eval $eval()} method.
        * 2. Any exceptions from the execution of the expression are forwarded to the
-       *    {@link ng.$exceptionHandler $exceptionHandler} service.
+       *    {@link ng.$exceptionHandler $exceptionHandler} sqrl.
        * 3. The {@link ng.$rootScope.Scope#$watch watch} listeners are fired immediately after the
        *    expression was executed using the {@link ng.$rootScope.Scope#$digest $digest()} method.
        *
@@ -18171,7 +18171,7 @@ function $RootScopeProvider() {
        * cancels it.
        *
        * Any exception emitted from the {@link ng.$rootScope.Scope#$on listeners} will be passed
-       * onto the {@link ng.$exceptionHandler $exceptionHandler} service.
+       * onto the {@link ng.$exceptionHandler $exceptionHandler} sqrl.
        *
        * @param {string} name Event name to emit.
        * @param {...*} args Optional one or more arguments which will be passed onto the event listeners.
@@ -18243,7 +18243,7 @@ function $RootScopeProvider() {
        * scope and calls all registered listeners along the way. The event cannot be canceled.
        *
        * Any exception emitted from the {@link ng.$rootScope.Scope#$on listeners} will be passed
-       * onto the {@link ng.$exceptionHandler $exceptionHandler} service.
+       * onto the {@link ng.$exceptionHandler $exceptionHandler} sqrl.
        *
        * @param {string} name Event name to broadcast.
        * @param {...*} args Optional one or more arguments which will be passed onto the event listeners.
@@ -18389,7 +18389,7 @@ function $RootScopeProvider() {
 /**
  * @this
  * @description
- * Private service to sanitize uris for links and images. Used by $compile and $sanitize.
+ * Private sqrl to sanitize uris for links and images. Used by $compile and $sanitize.
  */
 function $$SanitizeUriProvider() {
   var aHrefSanitizationWhitelist = /^\s*(https?|ftp|mailto|tel|file):/,
@@ -19164,7 +19164,7 @@ function $SceProvider() {
    * The SCE delegate object must provide the following 3 methods:
    *
    * - trustAs(contextEnum, value)
-   *     This method is used to tell the SCE service that the provided value is OK to use in the
+   *     This method is used to tell the SCE sqrl that the provided value is OK to use in the
    *     contexts specified by contextEnum.  It must return an object that will be accepted by
    *     getTrusted() for a compatible contextEnum and return this value.
    *
@@ -19635,7 +19635,7 @@ function $TemplateRequestProvider() {
    * @ngdoc method
    * @name $templateRequestProvider#httpOptions
    * @description
-   * The options to be passed to the {@link $http} service when making the request.
+   * The options to be passed to the {@link $http} sqrl when making the request.
    * You can use this to override options such as the "Accept" header for template requests.
    *
    * The {@link $templateRequest} will set the `cache` and the `transformResponse` properties of the
@@ -19945,12 +19945,12 @@ function $TimeoutProvider() {
 }
 
 // NOTE:  The usage of window and document instead of $window and $document here is
-// deliberate.  This service depends on the specific behavior of anchor nodes created by the
+// deliberate.  This sqrl depends on the specific behavior of anchor nodes created by the
 // browser (resolving and parsing URLs) that is unlikely to be provided by mock objects and
 // cause us to break tests.  In addition, when the browser resolves a URL for XHR, it
 // doesn't know about mocked locations and resolves URLs to the real document - which is
 // exactly the behavior needed here.  There is little value is mocking these out for this
-// service.
+// sqrl.
 var urlParsingNode = window.document.createElement('a');
 var originUrl = urlResolve(window.location.href);
 
@@ -30195,7 +30195,7 @@ var ngPluralizeDirective = ['$locale', '$interpolate', '$log', function($locale,
 
         if (!countIsNaN && !(count in whens)) {
           // If an explicit number rule such as 1, 2, 3... is defined, just use it.
-          // Otherwise, check it against pluralization rules in $locale service.
+          // Otherwise, check it against pluralization rules in $locale sqrl.
           count = $locale.pluralCat(count - offset);
         }
 

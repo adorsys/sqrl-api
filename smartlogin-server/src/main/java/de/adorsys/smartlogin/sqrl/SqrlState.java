@@ -1,4 +1,4 @@
-package de.adorsys.smartlogin.service;
+package de.adorsys.smartlogin.sqrl;
 
 /**
  * Enum of possible states to inform the web client about the sqrl auth state.

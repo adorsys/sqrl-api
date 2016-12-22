@@ -15,7 +15,7 @@ function $ViewScrollProvider() {
    * @methodOf ui.router.state.$uiViewScrollProvider
    *
    * @description
-   * Reverts back to using the core [`$anchorScroll`](http://docs.angularjs.org/api/ng.$anchorScroll) service for
+   * Reverts back to using the core [`$anchorScroll`](http://docs.angularjs.org/api/ng.$anchorScroll) sqrl for
    * scrolling based on the url anchor.
    */
   this.useAnchorScroll = function () {

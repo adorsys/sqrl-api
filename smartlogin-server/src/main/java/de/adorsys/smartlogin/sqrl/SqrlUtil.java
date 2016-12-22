@@ -1,10 +1,11 @@
-package de.adorsys.smartlogin.service;
+package de.adorsys.smartlogin.sqrl;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import net.glxn.qrgen.QRCode;
@@ -12,7 +13,7 @@ import net.glxn.qrgen.image.ImageType;
 
 /**
  * Utilities for sqrl url & qr-code generation etc.
- * 
+ *
  * @author mko
  */
 public class SqrlUtil {
@@ -36,10 +37,8 @@ public class SqrlUtil {
     /**
      * Add sqrl-uri and qr data as attributes to given HttpServletRequest.
      *
-     * @param srequest
-     *            the srequest
-     * @param nut
-     *            the nut
+     * @param srequest the srequest
+     * @param nut      the nut
      */
     public static void addSqrlUrl(HttpServletRequest srequest, UriInfo uriInfo, String nut) {
 
@@ -67,29 +66,29 @@ public class SqrlUtil {
      */
     public static String buildSqrlUrl(String nut, UriInfo uriInfo) {
         String protocol = uriInfo.getRequestUri().getScheme().equals("https") ? "sqrl" : "qrl";
-        return UrlUtils
-                .publicUriBuilder().scheme(protocol).replacePath("/smartlogin-server/rest/auth/sqrl").queryParam("nut", nut).build().toString();
+        return UriBuilder.fromUri(System.getenv("SQRL_PUBLIC_BASE_URL"))
+                .scheme(protocol)
+                .replacePath("/smartlogin-server/rest/auth/sqrl")
+                .queryParam("nut", nut)
+                .build().toString();
     }
 
     /**
      * Builds the qr's source url.
      *
-     * @param srequest
-     *            the srequest
-     * @param nut
-     *            the nut
+     * @param srequest the srequest
+     * @param nut      the nut
      * @return the string
      */
     public static String buildQrUrl(HttpServletRequest srequest, String nut) {
         //"http://" + srequest.getLocalName() + ":" + srequest.getServerPort() +
-        return  "/bouncer.server/rest/auth/sqrl-qr-code?nut=" + nut;
+        return "/bouncer.server/rest/auth/sqrl-qr-code?nut=" + nut;
     }
 
     /**
      * Extract client parameter map from client request.
      *
-     * @param req
-     *            the req
+     * @param req the req
      * @return the map
      */
     public static Map<String, String> extractClientParameterMap(HttpServletRequest req) {

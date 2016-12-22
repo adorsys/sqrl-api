@@ -1,4 +1,4 @@
-package de.adorsys.smartlogin.service;
+package de.adorsys.smartlogin.sqrl;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Response;
 
-import de.adorsys.smartlogin.provider.AccountProvider;
+import de.adorsys.smartlogin.spi.SqrlAccountProvider;
 import net.vrallev.java.sqrl.SqrlException;
 import net.vrallev.java.sqrl.SqrlProtocol;
 import net.vrallev.java.sqrl.body.ServerParameter;
@@ -60,7 +60,7 @@ public class SqrlAuthenticationService {
     private SqrlCacheService cache;
 
     @Inject
-    private AccountProvider accountProvider;
+    private SqrlAccountProvider sqrlAccountProvider;
 
     @Inject
     private SqrlRequestKeyIdentityDepot keys;
@@ -71,7 +71,7 @@ public class SqrlAuthenticationService {
      * Trys to extract expected SQRL data from HttpRequest, parse it into an insecure client body instance without checking
      * signatures. That will lead to a possible decoded 'nut' value.
      * <p/>
-     * If we have the 'nut' AND an according 'ProcessData'-instance as data provider between Web and SQRL client we can start
+     * If we have the 'nut' AND an according 'ProcessData'-instance as data spi between Web and SQRL client we can start
      * SQRL auth itself.
      */
     public void handleSqrlRequest(HttpServletRequest req, HttpServletResponse resp) throws SqrlAuthException {
@@ -126,8 +126,8 @@ public class SqrlAuthenticationService {
 
         keys.pidk = insecureClientBody.getClientParameter().getPreviousIdentityKeyDecoded();
 
-        byte[] serverUnlockKey = accountProvider.fetchServerUnlockKey(keys.idk);
-        byte[] verifyUnlockKey = accountProvider.fetchVerifyUnlockKey(keys.idk);
+        byte[] serverUnlockKey = sqrlAccountProvider.fetchServerUnlockKey(keys.idk);
+        byte[] verifyUnlockKey = sqrlAccountProvider.fetchVerifyUnlockKey(keys.idk);
 
         if (serverUnlockKey != null && verifyUnlockKey != null) {
             clientBodyParser.withStoredKeys(serverUnlockKey, verifyUnlockKey);
@@ -239,8 +239,8 @@ public class SqrlAuthenticationService {
     }
 
     private SqrlServerBody onLogin(SqrlClientBody clientBody, String nut, List<SqrlState> stateCollector) {
-        byte[] storedServerUnlockKey = accountProvider.fetchServerUnlockKey(keys.idk);
-        byte[] storedVerifyUnlockKey = accountProvider.fetchVerifyUnlockKey(keys.idk);
+        byte[] storedServerUnlockKey = sqrlAccountProvider.fetchServerUnlockKey(keys.idk);
+        byte[] storedVerifyUnlockKey = sqrlAccountProvider.fetchVerifyUnlockKey(keys.idk);
 
         if (storedServerUnlockKey != null && storedVerifyUnlockKey != null) {
 
@@ -299,8 +299,8 @@ public class SqrlAuthenticationService {
 
         String userLogin = processData.getPreparedData().findValue(PREPARED_FIELD_USER_LOGIN);
 
-        byte[] storedServerUnlockKey = accountProvider.fetchServerUnlockKey(keys.idk);
-        byte[] storedVerifyUnlockKey = accountProvider.fetchVerifyUnlockKey(keys.idk);
+        byte[] storedServerUnlockKey = sqrlAccountProvider.fetchServerUnlockKey(keys.idk);
+        byte[] storedVerifyUnlockKey = sqrlAccountProvider.fetchVerifyUnlockKey(keys.idk);
 
         if (storedServerUnlockKey == null && storedVerifyUnlockKey == null) {
             if (userLogin != null) {
@@ -309,7 +309,7 @@ public class SqrlAuthenticationService {
                 byte[] verifyUnlockKey = clientBody.getClientParameter().getVerifyUnlockKeyDecoded();
 
                 LOG.info("onCreate: Trying to insert sqrl keys");
-                if (accountProvider.insertSqrlKeys(userLogin, keys.idk, serverUnlockKey, verifyUnlockKey)) {
+                if (sqrlAccountProvider.insertSqrlKeys(userLogin, keys.idk, serverUnlockKey, verifyUnlockKey)) {
                     stateCollector.add(SqrlState.CREATE_SUCCEEDED);
                     return SqrlProtocol.instance().answerClient(clientBody, ServerParameter.ID_MATCH).withServerFriendlyName(FRIENDLY_SERVER_NAME)
                             .withStoredKeys(serverUnlockKey, verifyUnlockKey).create().asSqrlServerBody();
@@ -335,7 +335,7 @@ public class SqrlAuthenticationService {
         byte[] previousIdentityKey = clientBody.getClientParameter().getPreviousIdentityKeyDecoded();
 
         if (previousIdentityKey != null) {
-            if (accountProvider.updateSqrlKeys(previousIdentityKey, keys.idk, serverUnlockKey, verifyUnlockKey)) {
+            if (sqrlAccountProvider.updateSqrlKeys(previousIdentityKey, keys.idk, serverUnlockKey, verifyUnlockKey)) {
                 stateCollector.add(SqrlState.SUCCEEDED);
                 return SqrlProtocol.instance().answerClient(clientBody, ServerParameter.ID_MATCH).withServerFriendlyName(FRIENDLY_SERVER_NAME)
                         .withStoredKeys(serverUnlockKey, verifyUnlockKey).create().asSqrlServerBody();
@@ -348,8 +348,8 @@ public class SqrlAuthenticationService {
     }
 
     private SqrlServerBody onSetLock(SqrlClientBody clientBody, String nut, List<SqrlState> stateCollector) {
-        byte[] storedServerUnlockKey = accountProvider.fetchServerUnlockKey(keys.idk);
-        byte[] storedVerifyUnlockKey = accountProvider.fetchVerifyUnlockKey(keys.idk);
+        byte[] storedServerUnlockKey = sqrlAccountProvider.fetchServerUnlockKey(keys.idk);
+        byte[] storedVerifyUnlockKey = sqrlAccountProvider.fetchVerifyUnlockKey(keys.idk);
 
         byte[] serverUnlockKey = clientBody.getClientParameter().getServerUnlockKeyDecoded();
         byte[] verifyUnlockKey = clientBody.getClientParameter().getVerifyUnlockKeyDecoded();
@@ -378,7 +378,7 @@ public class SqrlAuthenticationService {
             // update allowed
             if (valid) {
                 // update success
-                if (!accountProvider.updateSqrlServerAndVerifyUnlockKey(keys.idk, serverUnlockKey, verifyUnlockKey)) {
+                if (!sqrlAccountProvider.updateSqrlServerAndVerifyUnlockKey(keys.idk, serverUnlockKey, verifyUnlockKey)) {
                     LOG.error("Could not persist new lock key. Ensure correct identity key.");
                     error = true;
                 }
@@ -404,7 +404,7 @@ public class SqrlAuthenticationService {
     // helper //
 
     private String getAccountId(byte[] identityKey) {
-        return accountProvider.checkIdentity(identityKey);
+        return sqrlAccountProvider.checkIdentity(identityKey);
     }
 
     private void updateState(String nut, SqrlState state) {

@@ -1,9 +1,7 @@
 package de.adorsys.smartlogin.rest;
 
-import java.io.File;
 import java.io.IOException;
 
-import javax.activation.MimetypesFileTypeMap;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -20,18 +18,18 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import de.adorsys.smartlogin.service.SqrlAuthException;
-import de.adorsys.smartlogin.service.SqrlAuthenticationPreparationData;
-import de.adorsys.smartlogin.service.SqrlAuthenticationService;
-import de.adorsys.smartlogin.service.SqrlResponse;
-import de.adorsys.smartlogin.service.SqrlWebApplicationService;
+import de.adorsys.smartlogin.sqrl.SqrlAuthException;
+import de.adorsys.smartlogin.sqrl.SqrlAuthenticationPreparationData;
+import de.adorsys.smartlogin.sqrl.SqrlAuthenticationService;
+import de.adorsys.smartlogin.sqrl.SqrlResponse;
+import de.adorsys.smartlogin.sqrl.SqrlWebApplicationService;
 
 /**
  * Created by alexg on 07.12.16.
  */
 @Path("auth")
 @ApplicationScoped
-public class AuthResource {
+public class SqrlResource {
 
     @Inject
     private SqrlWebApplicationService sqrlService;

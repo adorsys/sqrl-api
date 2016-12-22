@@ -1,16 +1,14 @@
-package de.adorsys.smartlogin.service;
+package de.adorsys.smartlogin.sqrl;
 
-import de.adorsys.smartlogin.provider.AccountProvider;
+import de.adorsys.smartlogin.spi.SqrlAccountProvider;
 import net.glxn.qrgen.QRCode;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -28,7 +26,7 @@ public class SqrlWebApplicationService {
     private SqrlCacheService cache;
 
     @Inject
-    private AccountProvider accountProvider;
+    private SqrlAccountProvider sqrlAccountProvider;
     
     /**
      * Initializes a SQRL authentication session, adds sqrl-url data to the
@@ -121,8 +119,8 @@ public class SqrlWebApplicationService {
      * @return true, if successful
      */
     public boolean existsSqrlIdentityFor(String nut, String userId){
-        if(cache.existsProcessDataFor(nut) && accountProvider.accountExists(userId)){
-            return accountProvider.sqrlIdentityExists(userId);
+        if(cache.existsProcessDataFor(nut) && sqrlAccountProvider.accountExists(userId)){
+            return sqrlAccountProvider.sqrlIdentityExists(userId);
         }
         else{
             throw new SqrlAuthException(Response.Status.BAD_REQUEST);
@@ -137,8 +135,8 @@ public class SqrlWebApplicationService {
      * @return the response
      */
     public void requestSqrlDeletion(@QueryParam("nut") String nut, @QueryParam("userid") String userId){
-        if(cache.existsProcessDataFor(nut) && accountProvider.accountExists(userId)){
-            accountProvider.deleteSqrlIdentityIfExists(userId);
+        if(cache.existsProcessDataFor(nut) && sqrlAccountProvider.accountExists(userId)){
+            sqrlAccountProvider.deleteSqrlIdentityIfExists(userId);
         }
         else{
             throw new SqrlAuthException(Response.Status.BAD_REQUEST);

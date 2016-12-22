@@ -1,6 +1,6 @@
-package de.adorsys.smartlogin.service;
+package de.adorsys.smartlogin.sqrl;
 
-import de.adorsys.smartlogin.provider.SqrlCacheProvider;
+import de.adorsys.smartlogin.spi.SqrlCacheProvider;
 
 import javax.ejb.Singleton;
 import javax.enterprise.context.ApplicationScoped;
@@ -93,10 +93,9 @@ public class SqrlCacheService {
 			d.setState(SqrlState.values()[state]);
 			d.setPrepareData(new SqrlAuthenticationPreparationData(prep));
 			if (resp != null) {
-				d.setResponse(new SqrlResponse(resp
-						.get(SqrlResponse.Fields.ACCESS_TOKEN_ID), Long
-						.valueOf(resp
-								.get(SqrlResponse.Fields.EXPIRATION_DURATION))));
+				d.setResponse(
+						new SqrlResponse(resp.get(SqrlResponse.Fields.ACCESS_TOKEN_ID),
+								Long.valueOf(resp.get(SqrlResponse.Fields.EXPIRATION_DURATION))));
 			}
 			return d;
 		}

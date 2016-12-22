@@ -1,9 +1,9 @@
-package de.adorsys.smartlogin.provider;
+package de.adorsys.smartlogin.spi;
 
 /**
  * Created by alexg on 07.12.16.
  */
-public interface AccountProvider {
+public interface SqrlAccountProvider {
     
     byte[] fetchServerUnlockKey(byte[] idk);
 

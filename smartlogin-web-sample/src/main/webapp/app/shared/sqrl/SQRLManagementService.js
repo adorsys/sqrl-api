@@ -149,7 +149,7 @@ var SQRLManagementService = function ($http, $interval) {
      */
     return {
         /**
-         * Initialize the service with desired authentication base uri.
+         * Initialize the sqrl with desired authentication base uri.
          *
          * @param authBaseUri
          */
@@ -218,7 +218,7 @@ var SQRLManagementService = function ($http, $interval) {
             return service.provided.exists.result;
         },
         /**
-         * Provide random string generation to service consumer.
+         * Provide random string generation to sqrl consumer.
          * @returns {string} means {char[]}
          */
         generateRandomString: function () {

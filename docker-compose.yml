@@ -2,14 +2,20 @@ version: '2'
 services:   
     wildfly:
         image: jboss/wildfly
+        links: 
+            - mongo
         ports:
             - "8080:8080"
             - "9990:9990"
             - "8787:8787"
         environment:
             JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8787
-            SQRL_PUBLIC_BASE_URL: http://172.26.0.18:8080
+            SQRL_PUBLIC_BASE_URL: http://192.168.1.143:8080
+            MONGO_HOST: mongo
         command:
             /bin/bash -c "/opt/jboss/wildfly/bin/add-user.sh admin admin123 --silent; 
             /opt/jboss/wildfly/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0"
-            
+    mongo:
+        image: mongo:latest
+        ports:
+            - "27017:27017"

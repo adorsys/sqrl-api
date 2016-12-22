@@ -35,9 +35,6 @@ function HomeCtrl($scope, $http, SQRLLoginService) {
 
             sqrlLoginSetup();
 
-        },
-        function (error) {
-            console.log(error);
         }
     );
 
