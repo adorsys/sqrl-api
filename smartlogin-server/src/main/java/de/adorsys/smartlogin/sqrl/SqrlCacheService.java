@@ -82,22 +82,20 @@ public class SqrlCacheService {
 		if (existsProcessDataFor(nut)) {
 
 			int state = sqrlCache.findState(nut);
-			Map<String, String> prep = sqrlCache
-					.findPreparationData(nut);
-			Map<String, String> resp = sqrlCache
-					.findResponseData(nut);
+			Map<String, String> prep = sqrlCache.findPreparationData(nut);
+			Map<String, String> resp = sqrlCache.findResponseData(nut);
 
-			SqrlProcessData d = new SqrlProcessData();
+			SqrlProcessData sqrlProcessData = new SqrlProcessData();
+			sqrlProcessData.setNut(nut);
+			sqrlProcessData.setState(SqrlState.values()[state]);
+			sqrlProcessData.setPrepareData(new SqrlAuthenticationPreparationData(prep));
 
-			d.setNut(nut);
-			d.setState(SqrlState.values()[state]);
-			d.setPrepareData(new SqrlAuthenticationPreparationData(prep));
 			if (resp != null) {
-				d.setResponse(
+				sqrlProcessData.setResponse(
 						new SqrlResponse(resp.get(SqrlResponse.Fields.ACCESS_TOKEN_ID),
 								Long.valueOf(resp.get(SqrlResponse.Fields.EXPIRATION_DURATION))));
 			}
-			return d;
+			return sqrlProcessData;
 		}
 		return null;
 	}
