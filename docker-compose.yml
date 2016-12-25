@@ -10,7 +10,7 @@ services:
             - "8787:8787"
         environment:
             JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8787
-            SQRL_PUBLIC_BASE_URL: http://192.168.1.143:8080
+            SQRL_PUBLIC_BASE_URL: http://192.168.1.15:8080
             MONGO_HOST: mongo
         command:
             /bin/bash -c "/opt/jboss/wildfly/bin/add-user.sh admin admin123 --silent; 
@@ -19,3 +19,8 @@ services:
         image: mongo:latest
         ports:
             - "27017:27017"
+    keycloak:
+        image : jboss/keycloak:2.4.0.Final
+        ports:
+            - "8081:8080"
+            - "9991:9990"
