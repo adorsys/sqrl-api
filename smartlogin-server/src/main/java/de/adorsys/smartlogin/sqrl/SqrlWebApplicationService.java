@@ -119,7 +119,7 @@ public class SqrlWebApplicationService {
      * @return true, if successful
      */
     public boolean existsSqrlIdentityFor(String nut, String userId){
-        if(cache.existsProcessDataFor(nut) && sqrlAccountProvider.accountExists(userId)){
+        if(cache.existsProcessDataFor(nut) && sqrlAccountProvider.accountExistsBySqrlAccountId(userId)){
             return sqrlAccountProvider.sqrlIdentityExists(userId);
         }
         else{
@@ -135,7 +135,7 @@ public class SqrlWebApplicationService {
      * @return the response
      */
     public void requestSqrlDeletion(@QueryParam("nut") String nut, @QueryParam("userid") String userId){
-        if(cache.existsProcessDataFor(nut) && sqrlAccountProvider.accountExists(userId)){
+        if(cache.existsProcessDataFor(nut) && sqrlAccountProvider.accountExistsBySqrlAccountId(userId)){
             sqrlAccountProvider.deleteSqrlIdentityIfExists(userId);
         }
         else{

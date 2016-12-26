@@ -18,9 +18,18 @@ public class SqrlAccountRepository implements SqrlAccountProvider {
     @Inject
     private Datastore datastore;
 
-    public boolean accountExists(String accountId) {
+    public void createSqrlAccount(SqrlAccount sqrlAccount) {
+        datastore.save(sqrlAccount);
+    }
+
+    public boolean accountExistsBySqrlAccountId(String accountId) {
         ObjectId id = new ObjectId(accountId);
         return  datastore.createQuery(SqrlAccount.class).field(SqrlAccount.Fields.ID).equal(id).countAll() > 0;
+    }
+
+    @Override
+    public boolean accountExistsByIdpAccountId(String id) {
+        return  datastore.createQuery(SqrlAccount.class).field(SqrlAccount.Fields.IDP_ACCOUNT_ID).equal(id).countAll() > 0;
     }
 
     public String checkIdentity(byte[] identityKey) {
@@ -79,7 +88,7 @@ public class SqrlAccountRepository implements SqrlAccountProvider {
 
     public boolean insertSqrlKeys(String userLogin, byte[] identityKey, byte[] serverUnlockKey, byte[] verifyUnlockKey) {
         Query<SqrlAccount> query = datastore.createQuery(SqrlAccount.class);
-        query.criteria(SqrlAccount.Fields.ACCOUNT_ALIAS).equal(userLogin);
+        query.criteria(SqrlAccount.Fields.IDP_ACCOUNT_ID).equal(userLogin);
         return doUpdateSqrlKeys(query.get(), identityKey, serverUnlockKey, verifyUnlockKey);
     }
 

@@ -20,8 +20,8 @@ var SQRLManagementService = function ($http, $interval) {
         }
     };
 
-    service.setup = function (authUri) {
-        service.baseUri = authUri;
+    service.setup = function () {
+        service.baseUri = "/smartlogin-server/rest/auth";
 
         return $http.get(service.baseUri + "/sqrl-uri").then(function (response) {
             var qmIndex = response.data.indexOf("?");
@@ -125,7 +125,7 @@ var SQRLManagementService = function ($http, $interval) {
             }
         };
         var json = angular.toJson(prepared);
-        $http.post(service.baseUri + "/sqrl-prepare?" + service.nut, json).then(function (response) {
+        $http.post(service.baseUri + "/sqrl-prepare?" + service.nut, json).then(function () {
             service.updateStateLoop = $interval(function () {
                 service.pollLinkingState();
             }, 2000);
@@ -153,8 +153,8 @@ var SQRLManagementService = function ($http, $interval) {
          *
          * @param authBaseUri
          */
-        setup: function(authBaseUri){
-            return service.setup(authBaseUri);
+        setup: function(){
+            return service.setup();
         },
         /**
          * Provides the sqrl-uri.

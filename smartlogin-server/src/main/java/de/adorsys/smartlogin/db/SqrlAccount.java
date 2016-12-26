@@ -12,7 +12,7 @@ public class SqrlAccount {
 
     public interface Fields {
         String ID = "_id";
-        String ACCOUNT_ALIAS = "accountAlias";
+        String IDP_ACCOUNT_ID = "idpAccountId";
         String ACCOUNT_SQRL_KEY_IDENTITY = "sqrlIdentityKey";
         String ACCOUNT_SQRL_KEY_SERVER_UNLOCK = "sqrlServerUnlockKey";
         String ACCOUNT_SQRL_KEY_VERIFY_UNLOCK = "sqrlVerifyUnlockKey";
@@ -20,7 +20,7 @@ public class SqrlAccount {
 
     @Id
     private ObjectId accountId;
-    private String accountAlias;
+    private String idpAccountId;
     private byte[] sqrlIdentityKey;
     private byte[] sqrlServerUnlockKey;
     private byte[] sqrlVerifyUnlockKey;
@@ -34,12 +34,12 @@ public class SqrlAccount {
         return this;
     }
 
-    public String getAccountAlias() {
-        return accountAlias;
+    public String getIdpAccountId() {
+        return idpAccountId;
     }
 
-    public SqrlAccount accountAlias(String accountAlias) {
-        this.accountAlias = accountAlias;
+    public SqrlAccount idpAccountId(String idpAccountId) {
+        this.idpAccountId = idpAccountId;
         return this;
     }
 

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Response;
 
+import de.adorsys.smartlogin.db.SqrlAccount;
 import de.adorsys.smartlogin.spi.SqrlAccountProvider;
 import net.vrallev.java.sqrl.SqrlException;
 import net.vrallev.java.sqrl.SqrlProtocol;
@@ -251,29 +252,23 @@ public class SqrlAuthenticationService {
 
             SqrlProcessData processData = cache.fetch(nut);
 
-            //TODO
-//            ApplicationClient client = getApplicationClient(processData.getPreparedData().findValue(PREPARED_FIELD_CLIENT_ID));
-//            if (client != null && accountId != null) {
+            //TODO IDP/Keycloak handling
+            if (accountId != null) {
 //                Token accessToken = CreateAndStoreTokenTask.createAndStoreToken(TokenType.REQUEST, accountId, client, "", services.getTokenRepository());
-//                // TODO - should we provide this to allow remembered login for
-//                // SQRL Auth?
-//                // Token refreshToken =
-//                // CreateAndStoreTokenTask.createAndStoreToken(TokenType.REFRESH,
-//                // accountId, client, "", services.getTokenRepository());
-//
-//                SqrlResponse sqrlResponse = new SqrlResponse(accessToken.getTokenId(), client.getExpirationDuration());
-//
-//                processData.setResponse(sqrlResponse);
-//                cache.cache(nut, processData);
-//
-//                stateCollector.add(SqrlState.LOGIN_SUCCEEDED);
-//
-//                return SqrlProtocol.instance()
-//                        .answerClient(clientBody, ServerParameter.ID_MATCH, ServerParameter.USER_LOGGED_IN)
-//                        .withServerFriendlyName(FRIENDLY_SERVER_NAME).withStoredKeys(storedServerUnlockKey, storedVerifyUnlockKey).create().asSqrlServerBody();
-//            } else {
-//                LOG.error("Could not retrieve valid application client or provided identity key was not found");
-//            }
+
+                SqrlResponse sqrlResponse = new SqrlResponse("test-token", 100000l);
+
+                processData.setResponse(sqrlResponse);
+                cache.cache(nut, processData);
+
+                stateCollector.add(SqrlState.LOGIN_SUCCEEDED);
+
+                return SqrlProtocol.instance()
+                        .answerClient(clientBody, ServerParameter.ID_MATCH, ServerParameter.USER_LOGGED_IN)
+                        .withServerFriendlyName(FRIENDLY_SERVER_NAME).withStoredKeys(storedServerUnlockKey, storedVerifyUnlockKey).create().asSqrlServerBody();
+            } else {
+                LOG.error("Could not retrieve valid application client or provided identity key was not found");
+            }
         } else {
             //if user id is known, we have preparation to create account
             LOG.warn("Default login not accepted, but detecting account creation prepared");
@@ -304,6 +299,11 @@ public class SqrlAuthenticationService {
 
         if (storedServerUnlockKey == null && storedVerifyUnlockKey == null) {
             if (userLogin != null) {
+
+                //TODO IDP/Keycloak handling account must exist - lazy creating sqrl account?
+                if (!sqrlAccountProvider.accountExistsByIdpAccountId(userLogin)) {
+                    sqrlAccountProvider.createSqrlAccount(new SqrlAccount().idpAccountId(userLogin));
+                }
 
                 byte[] serverUnlockKey = clientBody.getClientParameter().getServerUnlockKeyDecoded();
                 byte[] verifyUnlockKey = clientBody.getClientParameter().getVerifyUnlockKeyDecoded();

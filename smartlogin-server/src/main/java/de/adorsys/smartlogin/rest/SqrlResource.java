@@ -59,6 +59,7 @@ public class SqrlResource {
     }
 
     @GET
+    @Produces("text/plain")
     @Path("/sqrl-state")
     public String getSqrlState(@QueryParam("nut") String nut){
         return sqrlService.getSqrlState(nut).name();

@@ -1,0 +1,8 @@
+<div class="row" id="sqrl-wrap">
+    <div class="col-sm-4">
+        <a ng-href="{{sqrl.uri}}" id="sqrl-link">
+            <img id="sqrl-qr" ng-src="{{sqrl.qr}}" alt="Smart Login Code" style="max-width: 100%"/>
+        </a>
+        <div class="alert alert-success" ng-if="sqrl.linkSucceeded">Link Succeeded</div>
+    </div>
+</div>
