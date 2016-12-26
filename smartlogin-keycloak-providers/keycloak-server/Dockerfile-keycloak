@@ -1,0 +1,14 @@
+FROM jboss/keycloak:2.4.0.Final
+
+ENV JBOSS_HOME /opt/jboss/keycloak
+
+# Operate on standalone ha for clustering 
+ADD target/keycloak-server/account-resource.tar.gz $JBOSS_HOME/modules/system/layers/base 
+ADD keycloak-jboss-cli.txt $JBOSS_HOME/bin/
+RUN $JBOSS_HOME/bin/jboss-cli.sh --file=$JBOSS_HOME/bin/keycloak-jboss-cli.txt
+
+EXPOSE 8080
+
+ENTRYPOINT [ "/opt/jboss/docker-entrypoint.sh" ]
+
+CMD ["-b", "0.0.0.0", "-c", "standalone-ha.xml"]

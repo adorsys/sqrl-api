@@ -1,2 +1,39 @@
-smartlogin-server/target
-smartlogin-web-sample/target
+target/
+/target
+*/target/
+.project
+.classpath
+*/.classpath/
+*/*/.classpath/
+.classpath
+bin/
+*/bin/
+/bin
+node_modules/
+.settings/
+*/.settings/
+*/*/.settings/
+.idea/
+.DS_Store
+.DS_Store
+*/.DS_Store
+.iml
+.metadata/
+/.apt_generated
+*/.forge_settings
+.forge_settings
+*/*/.forge_settings
+*.prefs
+.factorypath
+*.class
+jslibs/node_modules/
+node_modules/**/*
+/node/**
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+/managerAgent/.idea/
+# Package Files #
+*.war
+*.ear
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*

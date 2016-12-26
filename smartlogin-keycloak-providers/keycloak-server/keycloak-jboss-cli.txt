@@ -1,0 +1,13 @@
+# This file provides an offline configuration of keycloak based original docker image from docker hub
+embed-server --server-config=standalone-ha.xml
+
+batch
+
+# Module installation are beter done with the docker copy command. Uncommented module command displayed here are just for documentation and are not complete.
+
+# Install Account resource as a module as a resource 
+# module add --name=system.layers.base.de.adorsys.smartlogin.account-resource --module-xml=modules/system/layers/base/de/adorsys/smartlogin/account-resource/main/module.xml --resources=modules/system/layers/base/de/adorsys/smartlogin/account-resource/main/account-resource.jar
+/subsystem=keycloak-server:list-add(name=providers, value=module:de.adorsys.smartlogin.account-resource)
+
+run-batch
+
