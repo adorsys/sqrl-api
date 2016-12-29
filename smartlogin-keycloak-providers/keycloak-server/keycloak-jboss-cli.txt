@@ -9,5 +9,14 @@ batch
 # module add --name=system.layers.base.de.adorsys.smartlogin.account-resource --module-xml=modules/system/layers/base/de/adorsys/smartlogin/account-resource/main/module.xml --resources=modules/system/layers/base/de/adorsys/smartlogin/account-resource/main/account-resource.jar
 /subsystem=keycloak-server:list-add(name=providers, value=module:de.adorsys.smartlogin.account-resource)
 
+# Move scheduling service db to keycloak database.
+/subsystem=ee/service=default-bindings:write-attribute(name=datasource, value="java:jboss/datasources/KeycloakDS")
+# Remove the fake ExampleDS
+/subsystem=datasources/data-source=ExampleDS:remove
+
+# Move KeycloakDS data location to volumes outside of container so we can preserve data on container restart and decide when to cleanup
+/subsystem=datasources/data-source=KeycloakDS:write-attribute(name=connection-url, value="jdbc:h2:/opt/jboss/keycloak/standalone/data/h2/keycloak;AUTO_SERVER=TRUE")
+
+
 run-batch
 

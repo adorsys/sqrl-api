@@ -12,7 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Response;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.adorsys.smartlogin.db.SqrlAccount;
+import de.adorsys.smartlogin.spi.IdpAccountProvider;
 import de.adorsys.smartlogin.spi.SqrlAccountProvider;
 import net.vrallev.java.sqrl.SqrlException;
 import net.vrallev.java.sqrl.SqrlProtocol;
@@ -20,9 +24,6 @@ import net.vrallev.java.sqrl.body.ServerParameter;
 import net.vrallev.java.sqrl.body.SqrlClientBody;
 import net.vrallev.java.sqrl.body.SqrlClientBodyParser;
 import net.vrallev.java.sqrl.body.SqrlServerBody;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The SQRL client's interface to the SQRL auth.<br>
@@ -65,6 +66,9 @@ public class SqrlAuthenticationService {
 
     @Inject
     private SqrlRequestKeyIdentityDepot keys;
+    
+    @Inject
+    private IdpAccountProvider idpAccountProvider;
 
     /**
      * SQRL authentication entrypoint.
@@ -299,23 +303,27 @@ public class SqrlAuthenticationService {
 
         if (storedServerUnlockKey == null && storedVerifyUnlockKey == null) {
             if (userLogin != null) {
-
-                //TODO IDP/Keycloak handling account must exist - lazy creating sqrl account?
-                if (!sqrlAccountProvider.accountExistsByIdpAccountId(userLogin)) {
-                    sqrlAccountProvider.createSqrlAccount(new SqrlAccount().idpAccountId(userLogin));
-                }
-
-                byte[] serverUnlockKey = clientBody.getClientParameter().getServerUnlockKeyDecoded();
-                byte[] verifyUnlockKey = clientBody.getClientParameter().getVerifyUnlockKeyDecoded();
-
-                LOG.info("onCreate: Trying to insert sqrl keys");
-                if (sqrlAccountProvider.insertSqrlKeys(userLogin, keys.idk, serverUnlockKey, verifyUnlockKey)) {
-                    stateCollector.add(SqrlState.CREATE_SUCCEEDED);
-                    return SqrlProtocol.instance().answerClient(clientBody, ServerParameter.ID_MATCH).withServerFriendlyName(FRIENDLY_SERVER_NAME)
-                            .withStoredKeys(serverUnlockKey, verifyUnlockKey).create().asSqrlServerBody();
-                } else {
-                    LOG.error("Saving SQRL identity data to db failed.");
-                }
+            	
+            	if(!idpAccountProvider.idpAccountExists(userLogin)){
+                    LOG.error("onCreate: User with account "+ userLogin + " not known to the idp.");            		
+            	} else {
+	                //TODO IDP/Keycloak handling account must exist - lazy creating sqrl account?
+	                if (!sqrlAccountProvider.accountExistsByIdpAccountId(userLogin)) {
+	                    sqrlAccountProvider.createSqrlAccount(new SqrlAccount().idpAccountId(userLogin));
+	                }
+	
+	                byte[] serverUnlockKey = clientBody.getClientParameter().getServerUnlockKeyDecoded();
+	                byte[] verifyUnlockKey = clientBody.getClientParameter().getVerifyUnlockKeyDecoded();
+	
+	                LOG.info("onCreate: Trying to insert sqrl keys");
+	                if (sqrlAccountProvider.insertSqrlKeys(userLogin, keys.idk, serverUnlockKey, verifyUnlockKey)) {
+	                    stateCollector.add(SqrlState.CREATE_SUCCEEDED);
+	                    return SqrlProtocol.instance().answerClient(clientBody, ServerParameter.ID_MATCH).withServerFriendlyName(FRIENDLY_SERVER_NAME)
+	                            .withStoredKeys(serverUnlockKey, verifyUnlockKey).create().asSqrlServerBody();
+	                } else {
+	                    LOG.error("Saving SQRL identity data to db failed.");
+	                }
+            	}
 
             } else {
                 LOG.error("onCreate: UserId was not prepared.");

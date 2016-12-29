@@ -118,6 +118,9 @@ var SQRLManagementService = function ($http, $interval) {
 
     //prepare the linking with userId and target clientId
     service.prepareLinking = function (userId) {
+    	// Francis 26.12.2016 : This can only be called when the user is logged in. 
+    	// This is why i think we will have to send an idp signed token (containing the user id) 
+    	// to the server instead of a simple userid.
         service.provided.responseData = undefined;
         var prepared = {
             data: {

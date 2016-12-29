@@ -1,3 +1,6 @@
+tmp.txt
+volumes/idp-server/data/**
+volumes/idp-server/post-deploy/generated/**
 target/
 /target
 */target/

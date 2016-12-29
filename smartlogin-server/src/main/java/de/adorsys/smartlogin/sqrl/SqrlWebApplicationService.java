@@ -76,6 +76,15 @@ public class SqrlWebApplicationService {
      */
     public void prepare(String nut, SqrlAuthenticationPreparationData data) {
         SqrlProcessData sqrlProcessData = cache.fetch(nut);
+        // We run into a null pointer here is the nut is no longer known to the server.
+        // So what to do: 
+        // Atl-1 : we return a 404 and tell call that nut is no longer in use.
+        //     - Good but client might be mallicious
+        //     - We will later need to use this to prevent DoS attacks. Caching 404 results.
+        // Alt-2 : we do nothing.
+        //      - 
+        // Will start with atl-2
+        if(sqrlProcessData==null) return;
         sqrlProcessData.setPrepareData(data);
         sqrlProcessData.setState(SqrlState.PREPARED);
         cache.cache(sqrlProcessData.getNut(), sqrlProcessData);

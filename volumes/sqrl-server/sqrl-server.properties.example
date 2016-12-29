@@ -1,0 +1,7 @@
+# Properties files for the sqrl server. Environment specific details like
+# the external ip of the server can be specified here.
+# this can be modified by each developer to reflect the external ip address of his machine.
+
+# Each developer will have to copy this under sqrl-server.properties.
+
+SQRL_PUBLIC_BASE_URL=http://192.168.1.15:8080

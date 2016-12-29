@@ -16,4 +16,12 @@ Docker file putting together the productive keycloak image.
 
 Jboss cli batch script used to configure standalone-ha.xml
 
+5. Post deployment scrip to add domain users
+usage>./post-deploy/add-domain-user.sh <username> <userpassword>
+
+6. create an sqrl client with direct access grant.
+usage> ./post-deploy/add-direct-grant-client.sh <client-id>
+
+
+
 
