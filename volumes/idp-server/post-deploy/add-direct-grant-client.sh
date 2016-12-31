@@ -49,7 +49,7 @@ echo $location
 jsonFile=`echo "/opt/jboss/idp-post-deploy/generated/$clientId.json"`
 
 # load keycloak json, if needed
-curl -s $location -H "Authorization: Bearer $TKN" -H "Accept: application/json, text/plain, */*" -D client.txt >> $jsonFile
+curl -s $location -H "Authorization: Bearer $TKN" -H "Accept: application/json, text/plain, */*" -D client.txt > $jsonFile
 
 # cleanup
 # rm tmp.txt  

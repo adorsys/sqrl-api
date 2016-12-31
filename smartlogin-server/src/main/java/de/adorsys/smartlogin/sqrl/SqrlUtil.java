@@ -66,13 +66,15 @@ public class SqrlUtil {
      */
     public static String buildSqrlUrl(String nut, UriInfo uriInfo) {
         String protocol = uriInfo.getRequestUri().getScheme().equals("https") ? "sqrl" : "qrl";
-        return UriBuilder.fromUri(System.getenv("SQRL_PUBLIC_BASE_URL"))
+        String s = UriBuilder.fromUri(System.getenv("SQRL_PUBLIC_BASE_URL"))
                 .scheme(protocol)
                 .replacePath("/smartlogin-server/rest/auth/sqrl")
                 .queryParam("nut", nut)
                 .build().toString();
+        
+        return s;
     }
-
+    
     /**
      * Builds the qr's source url.
      *

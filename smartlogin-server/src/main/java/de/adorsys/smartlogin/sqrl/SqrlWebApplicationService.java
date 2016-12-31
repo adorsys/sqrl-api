@@ -1,7 +1,7 @@
 package de.adorsys.smartlogin.sqrl;
 
-import de.adorsys.smartlogin.spi.SqrlAccountProvider;
-import net.glxn.qrgen.QRCode;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -9,7 +9,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.io.IOException;
+
+import org.apache.commons.lang3.StringUtils;
+import org.keycloak.jose.jws.JWSInput;
+import org.keycloak.jose.jws.JWSInputException;
+import org.keycloak.representations.JsonWebToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.adorsys.smartlogin.idp.IdpKeyReader;
+import de.adorsys.smartlogin.spi.SqrlAccountProvider;
+import net.glxn.qrgen.QRCode;
 
 /**
  * The web client's interface to the SQRL auth.<br>
@@ -21,6 +31,7 @@ import java.io.IOException;
  */
 @RequestScoped
 public class SqrlWebApplicationService {
+    private final static Logger LOG = LoggerFactory.getLogger(SqrlWebApplicationService.class);
 
     @Inject
     private SqrlCacheService cache;
@@ -85,9 +96,38 @@ public class SqrlWebApplicationService {
         //      - 
         // Will start with atl-2
         if(sqrlProcessData==null) return;
+        
+        // verify idp token if any.
+        String idpToken = data.getData().get("token");
+        String realmName = data.getData().getOrDefault("realmName", "master");
+        data.getData().clear();
+		try {
+			JsonWebToken jwt= verifyToken(idpToken, realmName);
+			if(jwt!=null){
+				String subject = jwt.getSubject();
+				data.getData().put("userId", subject);
+				data.getData().put("realmName", "master");
+			}
+		} catch (JWSInputException | IOException e) {
+			LOG.error("Can not read or verify token", e);
+		}
+
         sqrlProcessData.setPrepareData(data);
         sqrlProcessData.setState(SqrlState.PREPARED);
         cache.cache(sqrlProcessData.getNut(), sqrlProcessData);
+    }
+    
+    private JsonWebToken verifyToken(String idpToken, String realmName) throws JWSInputException, FileNotFoundException, IOException{
+        if(StringUtils.isNotBlank(idpToken)){
+        	JWSInput jwsInput = new JWSInput(idpToken);
+        	String keyId = jwsInput.getHeader().getKeyId();
+        	String idpCertificate = IdpKeyReader.readIdpCertificate(keyId, realmName);
+        	
+        	// TODO use another library for better verification
+        	boolean verify = jwsInput.verify(idpCertificate);
+        	if(verify) return jwsInput.readJsonContent(JsonWebToken.class);
+        }
+        return null;
     }
 
     /**

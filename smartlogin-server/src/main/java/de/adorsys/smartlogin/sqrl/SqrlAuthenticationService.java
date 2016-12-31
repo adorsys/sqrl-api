@@ -54,7 +54,7 @@ import net.vrallev.java.sqrl.body.SqrlServerBody;
 public class SqrlAuthenticationService {
 
     private final static Logger LOG = LoggerFactory.getLogger(SqrlAuthenticationService.class);
-
+    
     private final static String FRIENDLY_SERVER_NAME = "smartlogin";
     private final static String PREPARED_FIELD_USER_LOGIN = "userId";
 

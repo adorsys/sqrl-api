@@ -1,4 +1,4 @@
-function LoginCtrl($scope, $http, SQRLLoginService) {
+function LoginCtrl($scope, $http, SQRLLoginService, $state, $rootScope) {
 
     var clientId = "sample-client"
 
@@ -24,8 +24,50 @@ function LoginCtrl($scope, $http, SQRLLoginService) {
             }
         });
     }
-
-
+    
+	$scope.transformRequest = function(obj){
+        var str = [];
+        for(var p in obj){
+        	if(obj[p]==undefined) continue;
+        	str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+        }
+        return str.join("&");
+	};
+    
+    $scope.login = function(username, password){
+        // Read json config of server
+        $http.get('/smartlogin-server/rest/idp/sqrl-web-client/client-config'        
+        ).then(
+    		function(response){
+    			$scope.clientConfig = response.data;
+    			$scope.url = $scope.clientConfig['auth-server-url'];
+    	    	$http(
+	        		{
+	                	method : 'POST',
+	                	url : $scope.url+'/realms/master/protocol/openid-connect/token',
+	                	data : {'username':username, 'password':password, 'grant_type':'password', 'client_id':'sqrl-web-client'},
+	                	headers : {'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json'}, 
+	                    transformRequest: $scope.transformRequest        				
+	        		}
+    	    	).then(
+    	    		function(successResponse){
+//    	    			$scope.token=successResponse.data;
+//    	    			$scope.accessToken=$scope.token.access_token;
+    	    			$rootScope.token = successResponse.data.access_token;
+    	    			$scope.sqrl.watcher.unregisterLogin();
+    	    			$state.go('home.link');
+    	    		},
+            		function (errorResponse) {
+    	    			// todo show response on page.
+    	    			$scope.status=errorResponse.status;
+    	    			$scope.statusText=errorResponse.statusText;
+                    }    		
+    	    	);
+    			
+    		}
+        );    	
+    };
+    
     $http.get('/smartlogin-server/rest/auth/sqrl-uri').then(
         function (response) {
             var nutParam = response.data.substring(response.data.indexOf("?") + 1);

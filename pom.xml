@@ -11,6 +11,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+		<version.keycloak>2.4.0.Final</version.keycloak>
 	</properties>
 	<modules>
 		<module>smartlogin-server</module>
@@ -27,6 +28,7 @@
 				<configuration>
 					<!-- Put your docker host name here -->
 					<hostname>${host.name}</hostname>
+					<port>${port}</port>
 					<username>admin</username>
 					<password>admin123</password>
 				</configuration>
@@ -36,11 +38,24 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
+				<groupId>org.keycloak</groupId>
+				<artifactId>keycloak-core</artifactId>
+				<scope>provided</scope>
+				<version>${version.keycloak}</version>
+			</dependency>
+
+			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-lang3</artifactId>
-				<version>3.4</version>
+				<version>3.5</version>
 				<scope>compile</scope>
 			</dependency>
+			<dependency>
+			    <groupId>commons-io</groupId>
+			    <artifactId>commons-io</artifactId>
+			    <version>2.5</version>
+			</dependency>
+			
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>

@@ -8,7 +8,6 @@ services:
         ports:
             - "8080:8080"
             - "9990:9990"
-            - "8787:8787"
         volumes:
              - ./volumes/idp-server/post-deploy:/opt/jboss/idp-post-deploy
              - ./volumes/sqrl-server:/opt/jboss/sqrl-server
@@ -17,6 +16,7 @@ services:
             MONGO_HOST: mongo
             idphost: keycloak
             idpport: 8080
+            IDP_CONFIG_DIR: /opt/jboss/idp-post-deploy/generated
         env_file:
             - ./volumes/sqrl-server/sqrl-server.properties
         depends_on:
@@ -38,12 +38,27 @@ services:
             - "27017:27017"
     keycloak:
         image: sqrl/keycloak:1.0.0-SNAPSHOT
+        links: 
+            - mongo
         ports:
             - "8081:8080"
             - "9991:9990"
+            - "8787:8787"
         volumes:
+             - ./volumes/idp-server/post-deploy:/opt/jboss/idp-post-deploy
+             - ./volumes/sqrl-server:/opt/jboss/sqrl-server
              - ./volumes/idp-server/pre-deploy:/opt/jboss/keycloak/pre-deploy
              - ./volumes/idp-server/data:/opt/jboss/keycloak/standalone/data
+        environment:
+            JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8787
+            MONGO_HOST: mongo
+            idphost: keycloak
+            idpport: 8080
+            IDP_CONFIG_DIR: /opt/jboss/idp-post-deploy/generated
+        env_file:
+            - ./volumes/sqrl-server/sqrl-server.properties
+        depends_on:
+            - mongo
         entrypoint: /opt/jboss/keycloak/pre-deploy/docker-entrypoint-dev.sh
         command: -b 0.0.0.0 -bmanagement 0.0.0.0 -c standalone-ha.xml
             

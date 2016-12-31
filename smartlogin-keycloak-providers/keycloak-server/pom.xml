@@ -23,5 +23,17 @@
 			<version>1.0.0-SNAPSHOT</version>
 			<type>tar.gz</type>
 		</dependency>
+		<dependency>
+			<groupId>de.adorsys.smartlogin</groupId>
+			<artifactId>smartlogin-server</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>de.adorsys.smartlogin</groupId>
+			<artifactId>smartlogin-web-sample</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<type>war</type>
+		</dependency>
 	</dependencies>
 </project>

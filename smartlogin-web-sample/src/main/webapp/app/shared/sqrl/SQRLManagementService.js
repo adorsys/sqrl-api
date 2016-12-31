@@ -117,14 +117,14 @@ var SQRLManagementService = function ($http, $interval) {
     };
 
     //prepare the linking with userId and target clientId
-    service.prepareLinking = function (userId) {
+    service.prepareLinking = function (token) {
     	// Francis 26.12.2016 : This can only be called when the user is logged in. 
     	// This is why i think we will have to send an idp signed token (containing the user id) 
     	// to the server instead of a simple userid.
         service.provided.responseData = undefined;
         var prepared = {
             data: {
-                userId: userId
+                token: token
             }
         };
         var json = angular.toJson(prepared);
@@ -234,14 +234,14 @@ var SQRLManagementService = function ($http, $interval) {
          * @param clientId, the target application client id to proceed to
          * @returns {boolean}, true if server signals that linking is prepared -> SQRL Client can proceed now
          */
-        watchLinkAccountToSqrlPreparation: function (userId) {
+        watchLinkAccountToSqrlPreparation: function (token) {
             if (!service.prepareLinkingStarted) {
                 //ensure default login state update loop is cancelled
                 if (service.updateStateLoop) {
                     service.stopPolling();
                 }
 
-                service.prepareLinking(userId);
+                service.prepareLinking(token);
                 service.prepareLinkingStarted = true;
             }
             return service.provided.preparedLinking;

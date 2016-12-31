@@ -57,7 +57,7 @@ public class SqrlResource {
     public void prepare(@QueryParam("nut") String nut, SqrlAuthenticationPreparationData data){
         sqrlService.prepare(nut, data);
     }
-
+    
     @GET
     @Produces("text/plain")
     @Path("/sqrl-state")

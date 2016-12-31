@@ -1,6 +1,6 @@
-function LinkCtrl($scope, SQRLManagementService) {
+function LinkCtrl($scope, SQRLManagementService, $rootScope) {
 
-    var userId = "test-user"
+//    var userId = "test-user"
 
     $scope.sqrl = {
         prepared: false,
@@ -45,7 +45,7 @@ function LinkCtrl($scope, SQRLManagementService) {
 
     var prepareSqrl = function() {
         $scope.sqrl.watcher.deregisterLinkPrepare = $scope.$watch(function() {
-            return SQRLManagementService.watchLinkAccountToSqrlPreparation(userId);
+            return SQRLManagementService.watchLinkAccountToSqrlPreparation($rootScope.token);
         }, function(newValue) {
             if (newValue !== undefined) {
                 $scope.sqrl.prepared = newValue;

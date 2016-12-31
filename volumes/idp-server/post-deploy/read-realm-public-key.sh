@@ -26,7 +26,7 @@ while [ "$TKN" == 'test' ]; do
 done
 
 # read public key and stroe in file realm-master-keys.json
-curl -s "http://$hostAndPort/auth/admin/realms/master/keys" -H "Authorization: Bearer $TKN" -H 'Accept: application/json, text/plain, */*' -D response-header.txt >> /opt/jboss/idp-post-deploy/generated/realm-master-keys.json
+curl -s "http://$hostAndPort/auth/admin/realms/master/keys" -H "Authorization: Bearer $TKN" -H 'Accept: application/json, text/plain, */*' -D response-header.txt > /opt/jboss/idp-post-deploy/generated/realm-master-keys.json
 
 # cleanup
 # rm response-header.txt 

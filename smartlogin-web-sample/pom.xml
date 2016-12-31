@@ -8,7 +8,20 @@
 	</parent>
     <artifactId>smartlogin-web-sample</artifactId>
     <packaging>war</packaging>
-
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
+	
+	<dependencies>
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>7.0</version>
+			<scope>provided</scope>
+		</dependency>	
+	</dependencies>
     <build>
         <finalName>smartlogin-web-sample</finalName>
     </build>

@@ -4,6 +4,8 @@ ENV JBOSS_HOME /opt/jboss/keycloak
 
 # Operate on standalone ha for clustering 
 ADD target/keycloak-server/account-resource.tar.gz $JBOSS_HOME/modules/system/layers/base
+ADD target/keycloak-server/smartlogin-server.war $JBOSS_HOME/standalone/deployments/
+ADD target/keycloak-server/smartlogin-web-sample.war $JBOSS_HOME/standalone/deployments/
 ADD keycloak-jboss-cli.txt $JBOSS_HOME/bin/
 RUN $JBOSS_HOME/bin/jboss-cli.sh --file=$JBOSS_HOME/bin/keycloak-jboss-cli.txt
 RUN rm -rf $JBOSS_HOME/standalone/configuration/standalone_xml_history

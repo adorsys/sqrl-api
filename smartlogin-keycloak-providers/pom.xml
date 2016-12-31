@@ -9,7 +9,6 @@
 	<artifactId>keycloak-providers</artifactId>
 	<packaging>pom</packaging>
 	<properties>
-		<version.keycloak>2.4.0.Final</version.keycloak>
 		<version.jboss-logging>3.3.0.Final</version.jboss-logging>
 		<jboss-jaxrs-api_2.0_spec>1.0.0.Final</jboss-jaxrs-api_2.0_spec>
 	</properties>
@@ -46,12 +45,6 @@
 	</modules>
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>org.keycloak</groupId>
-				<artifactId>keycloak-core</artifactId>
-				<scope>provided</scope>
-				<version>${version.keycloak}</version>
-			</dependency>
 			<dependency>
 				<groupId>org.keycloak</groupId>
 				<artifactId>keycloak-server-spi</artifactId>
