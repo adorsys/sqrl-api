@@ -31,6 +31,9 @@ services:
             /opt/jboss/idp-post-deploy/add-domain-user.sh keycloak:8080 roman roman;
             /opt/jboss/idp-post-deploy/add-direct-grant-client.sh keycloak:8080 sqrl-web-client;
             /opt/jboss/idp-post-deploy/read-realm-public-key.sh keycloak:8080;
+            /opt/jboss/idp-post-deploy/sqrl-0-create-direct-grant-flow.sh keycloak:8080;
+            /opt/jboss/idp-post-deploy/sqrl-1-enable-direct-grant-executions.sh keycloak:8080;
+            /opt/jboss/idp-post-deploy/sqrl-2-replace-direct-grant-flow.sh keycloak:8080;
             /opt/jboss/wildfly/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0";
     mongo:
         image: mongo:latest

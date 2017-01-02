@@ -3,8 +3,10 @@ package de.adorsys.smartlogin.sqrl;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -16,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.adorsys.smartlogin.db.SqrlAccount;
-import de.adorsys.smartlogin.spi.IdpAccountProvider;
 import de.adorsys.smartlogin.spi.SqrlAccountProvider;
 import net.vrallev.java.sqrl.SqrlException;
 import net.vrallev.java.sqrl.SqrlProtocol;
@@ -66,9 +67,6 @@ public class SqrlAuthenticationService {
 
     @Inject
     private SqrlRequestKeyIdentityDepot keys;
-    
-    @Inject
-    private IdpAccountProvider idpAccountProvider;
 
     /**
      * SQRL authentication entrypoint.
@@ -257,12 +255,15 @@ public class SqrlAuthenticationService {
             SqrlProcessData processData = cache.fetch(nut);
 
             //TODO IDP/Keycloak handling
+            // Francis 31.12.2016 : keycloak handling will happen from the client. 
             if (accountId != null) {
-//                Token accessToken = CreateAndStoreTokenTask.createAndStoreToken(TokenType.REQUEST, accountId, client, "", services.getTokenRepository());
-
-                SqrlResponse sqrlResponse = new SqrlResponse("test-token", 100000l);
+                SqrlResponse sqrlResponse = new SqrlResponse(UUID.randomUUID().toString(), 100000l);
 
                 processData.setResponse(sqrlResponse);
+                
+                Map<String, String> data = new HashMap<>();
+                data.put("accountId", accountId);
+				processData.getPreparedData().setData(data);
                 cache.cache(nut, processData);
 
                 stateCollector.add(SqrlState.LOGIN_SUCCEEDED);
@@ -302,28 +303,26 @@ public class SqrlAuthenticationService {
         byte[] storedVerifyUnlockKey = sqrlAccountProvider.fetchVerifyUnlockKey(keys.idk);
 
         if (storedServerUnlockKey == null && storedVerifyUnlockKey == null) {
-            if (userLogin != null) {
+            if (userLogin != null) { 
+            	// No need to check for existence of user login with idp
+            	// user login is derived from legitimated bearer token.
             	
-            	if(!idpAccountProvider.idpAccountExists(userLogin)){
-                    LOG.error("onCreate: User with account "+ userLogin + " not known to the idp.");            		
-            	} else {
-	                //TODO IDP/Keycloak handling account must exist - lazy creating sqrl account?
-	                if (!sqrlAccountProvider.accountExistsByIdpAccountId(userLogin)) {
-	                    sqrlAccountProvider.createSqrlAccount(new SqrlAccount().idpAccountId(userLogin));
-	                }
-	
-	                byte[] serverUnlockKey = clientBody.getClientParameter().getServerUnlockKeyDecoded();
-	                byte[] verifyUnlockKey = clientBody.getClientParameter().getVerifyUnlockKeyDecoded();
-	
-	                LOG.info("onCreate: Trying to insert sqrl keys");
-	                if (sqrlAccountProvider.insertSqrlKeys(userLogin, keys.idk, serverUnlockKey, verifyUnlockKey)) {
-	                    stateCollector.add(SqrlState.CREATE_SUCCEEDED);
-	                    return SqrlProtocol.instance().answerClient(clientBody, ServerParameter.ID_MATCH).withServerFriendlyName(FRIENDLY_SERVER_NAME)
-	                            .withStoredKeys(serverUnlockKey, verifyUnlockKey).create().asSqrlServerBody();
-	                } else {
-	                    LOG.error("Saving SQRL identity data to db failed.");
-	                }
-            	}
+                //TODO IDP/Keycloak handling account must exist - lazy creating sqrl account?
+                if (!sqrlAccountProvider.accountExistsByIdpAccountId(userLogin)) {
+                    sqrlAccountProvider.createSqrlAccount(new SqrlAccount().idpAccountId(userLogin));
+                }
+
+                byte[] serverUnlockKey = clientBody.getClientParameter().getServerUnlockKeyDecoded();
+                byte[] verifyUnlockKey = clientBody.getClientParameter().getVerifyUnlockKeyDecoded();
+
+                LOG.info("onCreate: Trying to insert sqrl keys");
+                if (sqrlAccountProvider.insertSqrlKeys(userLogin, keys.idk, serverUnlockKey, verifyUnlockKey)) {
+                    stateCollector.add(SqrlState.CREATE_SUCCEEDED);
+                    return SqrlProtocol.instance().answerClient(clientBody, ServerParameter.ID_MATCH).withServerFriendlyName(FRIENDLY_SERVER_NAME)
+                            .withStoredKeys(serverUnlockKey, verifyUnlockKey).create().asSqrlServerBody();
+                } else {
+                    LOG.error("Saving SQRL identity data to db failed.");
+                }
 
             } else {
                 LOG.error("onCreate: UserId was not prepared.");

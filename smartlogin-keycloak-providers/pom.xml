@@ -41,6 +41,7 @@
 	</build>
 	<modules>
 		<module>account-resource</module>
+		<module>direct-grant</module>
 		<module>keycloak-server</module>
 	</modules>
 	<dependencyManagement>

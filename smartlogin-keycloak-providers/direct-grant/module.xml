@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Wildfly module for b2 persistence store for keycloak -->
+<module xmlns="urn:jboss:module:1.3" name="de.adorsys.smartlogin.direct-grant">
+	<resources>
+		<resource-root path="direct-grant.jar" />
+	</resources>
+	<dependencies>
+		<module name="org.keycloak.keycloak-core" />
+		<module name="org.keycloak.keycloak-services" />
+		<module name="org.keycloak.keycloak-server-spi" />
+		<module name="org.keycloak.keycloak-server-spi-private" />
+		<module name="org.jboss.resteasy.resteasy-jaxrs" />
+		<module name="javax.ws.rs.api" />
+	</dependencies>
+</module>

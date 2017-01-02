@@ -3,10 +3,10 @@
         <h3>Smartlogin</h3>
         <hr class="intro-divider">
         <ul class="list-inline">
-            <li>
-                <a ui-sref="home.link" class="btn btn-default btn-lg">Link</a>
+            <li ng-if="token">
+                <a ui-sref=".link" class="btn btn-default btn-lg">Link</a>
             </li>
-            <li>
+            <li ng-if="!token">
                 <a ui-sref=".login" class="btn btn-default btn-lg">Login</a>
             </li>
         </ul>

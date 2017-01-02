@@ -141,7 +141,7 @@ public class SqrlWebApplicationService {
     public SqrlState getSqrlState(String nut) {
         SqrlProcessData s = cache.fetch(nut);
         if (s == null) {
-            return SqrlState.NONE;
+            return SqrlState.FAILED;
         }
         return s.getState();
     }

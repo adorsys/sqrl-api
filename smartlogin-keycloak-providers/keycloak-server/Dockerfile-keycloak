@@ -2,10 +2,19 @@ FROM jboss/keycloak:2.4.0.Final
 
 ENV JBOSS_HOME /opt/jboss/keycloak
 
-# Operate on standalone ha for clustering 
+# modules
 ADD target/keycloak-server/account-resource.tar.gz $JBOSS_HOME/modules/system/layers/base
+ADD target/keycloak-server/direct-grant.tar.gz $JBOSS_HOME/modules/system/layers/base
+
+# sqrl modules
 ADD target/keycloak-server/smartlogin-server.war $JBOSS_HOME/standalone/deployments/
 ADD target/keycloak-server/smartlogin-web-sample.war $JBOSS_HOME/standalone/deployments/
+
+# h2 for access to keycloak database.
+ADD lib/h2console.war $JBOSS_HOME/standalone/deployments/
+ADD lib/.h2.server.properties /opt/jboss/
+
+# configuring wildfly over cli
 ADD keycloak-jboss-cli.txt $JBOSS_HOME/bin/
 RUN $JBOSS_HOME/bin/jboss-cli.sh --file=$JBOSS_HOME/bin/keycloak-jboss-cli.txt
 RUN rm -rf $JBOSS_HOME/standalone/configuration/standalone_xml_history

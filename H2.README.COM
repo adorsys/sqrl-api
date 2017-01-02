@@ -1,0 +1,17 @@
+Running keycloak on a h2 database under development.
+
+http://sqrl:8081/h2console/console
+
+
+Driver: org.h2.Driver
+URL: jdbc:h2:/opt/jboss/keycloak/standalone/data/h2/keycloak;AUTO_SERVER=TRUE
+
+user: sa
+password: sa
+
+
+
+SELECT ID FROM AUTHENTICATION_FLOW where alias='direct grant'
+
+SELECT * FROM AUTHENTICATION_EXECUTION where FLOW_ID = (SELECT ID FROM AUTHENTICATION_FLOW where alias='direct grant')
+

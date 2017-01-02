@@ -41,7 +41,7 @@ var SQRLManagementService = function ($http, $interval) {
                 service.provided.prepared = true;
             } else {
                 $interval.cancel(service.updateStateLoop);
-                service.updateStateLoop = undefined;
+//                service.updateStateLoop = undefined;
                 service.provided.success = response.data != "FAILED";
             }
         });
@@ -96,7 +96,7 @@ var SQRLManagementService = function ($http, $interval) {
     service.pollLinkingState = function () {
         $http.get(service.baseUri + "/sqrl-state?" + service.nut).then(function (response) {
             // ignore unchanged state
-            if (service.lastState == response.data) {
+            if (service.lastState == response.data && response.data!="FAILED") {// Stop on failled state.
                 return;
             }
 

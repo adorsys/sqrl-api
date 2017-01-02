@@ -1,5 +1,5 @@
-function HomeCtrl($scope, $http, SQRLLoginService) {
-
+function HomeCtrl($scope, $http, SQRLLoginService, $rootScope) {
+	$scope.token = $rootScope.token;
 
 }
 
