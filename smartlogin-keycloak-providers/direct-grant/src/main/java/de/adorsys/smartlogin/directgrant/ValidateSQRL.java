@@ -31,7 +31,7 @@ public class ValidateSQRL extends AbstractDirectGrantAuthenticator {
         String nut = inputData.getFirst("nut");
         String accessTokenId = inputData.getFirst("accessTokenId");
 
-        if (nut==null || nut.trim().length()==0 || accessTokenId==null || accessTokenId.trim().length()==0) {
+        if ((nut==null || nut.trim().length()==0) && (accessTokenId==null || accessTokenId.trim().length()==0)) {
             context.success();
             return;
         }
@@ -73,7 +73,7 @@ public class ValidateSQRL extends AbstractDirectGrantAuthenticator {
             }
         }
         
-        context.getClientSession().getUserSessionNotes().put("sqrl-login", "accessTokenId");
+//        context.getClientSession().getUserSession().setNote("sqrl-login", accessTokenId);
         context.setUser(user);
         context.success();
     }

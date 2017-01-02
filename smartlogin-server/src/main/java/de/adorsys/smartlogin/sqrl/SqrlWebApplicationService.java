@@ -155,9 +155,10 @@ public class SqrlWebApplicationService {
      */
     public SqrlResponse provideResponseData(String nut) {
         SqrlProcessData s = cache.fetch(nut);
-        SqrlResponse response = s.getResponse();
-        cache.drop(nut);
-        return response;
+        if(s==null) return null;
+        return s.getResponse();
+//        cache.drop(nut);
+//        return response;
     }
 
     /**

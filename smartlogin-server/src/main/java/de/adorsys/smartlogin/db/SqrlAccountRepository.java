@@ -143,5 +143,19 @@ public class SqrlAccountRepository implements SqrlAccountProvider {
         datastore.update(target, ops);
         return true;
     }
+    
+    @Override
+    public String getIdpAccountId(String accountId) {
+        Query<SqrlAccount> query = datastore.createQuery(SqrlAccount.class);
+        query.criteria(SqrlAccount.Fields.ID).equal(new ObjectId(accountId));
+        query.field(SqrlAccount.Fields.IDP_ACCOUNT_ID);
+        SqrlAccount account = query.get();
+        if (account == null) {
+            return null;
+        }
+
+        return account.getIdpAccountId();
+    }
+    
 
 }

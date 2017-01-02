@@ -28,4 +28,6 @@ public interface SqrlAccountProvider {
     boolean sqrlIdentityExists(String userId);
 
     void deleteSqrlIdentityIfExists(String userId);
+
+	String getIdpAccountId(String accountId);
 }

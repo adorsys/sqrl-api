@@ -1,4 +1,4 @@
-function LinkCtrl($scope, SQRLManagementService, $rootScope) {
+function LinkCtrl($scope, SQRLManagementService, $rootScope, $state) {
 
 //    var userId = "test-user"
 

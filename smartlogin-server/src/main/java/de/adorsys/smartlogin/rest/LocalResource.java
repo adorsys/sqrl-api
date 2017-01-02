@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import de.adorsys.smartlogin.rest.vo.SqrlLoginCredentials;
 import de.adorsys.smartlogin.rest.vo.SqrlLoginInfo;
+import de.adorsys.smartlogin.spi.SqrlAccountProvider;
 import de.adorsys.smartlogin.sqrl.SqrlCacheService;
 import de.adorsys.smartlogin.sqrl.SqrlProcessData;
 
@@ -28,6 +29,9 @@ public class LocalResource {
     @Inject
     private SqrlCacheService cache;
     
+    @Inject 
+    private SqrlAccountProvider accountProvider;
+    
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -38,6 +42,7 @@ public class LocalResource {
     	SqrlLoginInfo sqrlLoginInfo = new SqrlLoginInfo();
     	
     	SqrlProcessData sqrlProcessData = cache.fetch(credentials.getNut());
+    	cache.drop(credentials.getNut());
     	if(sqrlProcessData==null){
     		LOG.debug("No process data found for nut. " + credentials);
     		return sqrlLoginInfo;
@@ -56,7 +61,10 @@ public class LocalResource {
     		return sqrlLoginInfo;
     	}
     	
-    	sqrlLoginInfo.setAccountId(data.get("userId"));
+    	if (data.containsKey("accountId")){
+    		String idpAccountId = accountProvider.getIdpAccountId(data.get("accountId"));
+    		sqrlLoginInfo.setAccountId(idpAccountId);
+    	}
     	return sqrlLoginInfo;
     }
 }
