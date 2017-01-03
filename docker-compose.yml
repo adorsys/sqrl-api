@@ -1,45 +1,12 @@
 version: '2'
+# Only  use this file for subsequent starts
 services:   
-    wildfly:
-        image: jboss/wildfly:10.1.0.Final
-        links: 
-            - mongo
-            - keycloak
-        ports:
-            - "8080:8080"
-            - "9990:9990"
-        volumes:
-             - ./volumes/idp-server/post-deploy:/opt/jboss/idp-post-deploy
-             - ./volumes/sqrl-server:/opt/jboss/sqrl-server
-        environment:
-            JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8787
-            MONGO_HOST: mongo
-            idphost: keycloak
-            idpport: 8080
-            IDP_CONFIG_DIR: /opt/jboss/idp-post-deploy/generated
-        env_file:
-            - ./volumes/sqrl-server/sqrl-server.properties
-        depends_on:
-            - mongo
-            - keycloak
-        command:
-            /bin/bash -c "/opt/jboss/sqrl-server/wait-for-it.sh mongo:27017;
-            /opt/jboss/sqrl-server/wait-for-it.sh keycloak:9090;
-            /opt/jboss/wildfly/bin/add-user.sh admin admin123 --silent;
-            /opt/jboss/idp-post-deploy/add-domain-user.sh keycloak:8080 francis francis; 
-            /opt/jboss/idp-post-deploy/add-domain-user.sh keycloak:8080 alex alex;
-            /opt/jboss/idp-post-deploy/add-domain-user.sh keycloak:8080 roman roman;
-            /opt/jboss/idp-post-deploy/add-direct-grant-client.sh keycloak:8080 sqrl-web-client;
-            /opt/jboss/idp-post-deploy/read-realm-public-key.sh keycloak:8080;
-            /opt/jboss/idp-post-deploy/sqrl-0-create-direct-grant-flow.sh keycloak:8080;
-            /opt/jboss/idp-post-deploy/sqrl-1-enable-direct-grant-executions.sh keycloak:8080;
-            /opt/jboss/idp-post-deploy/sqrl-2-replace-direct-grant-flow.sh keycloak:8080;
-            /opt/jboss/wildfly/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0";
     mongo:
         image: mongo:latest
         ports:
             - "27017:27017"
     keycloak:
+        # Keycloak image might be built prior to starting this file.
         image: sqrl/keycloak:1.0.0-SNAPSHOT
         links: 
             - mongo
@@ -48,20 +15,19 @@ services:
             - "9991:9990"
             - "8787:8787"
         volumes:
-             - ./volumes/idp-server/post-deploy:/opt/jboss/idp-post-deploy
-             - ./volumes/sqrl-server:/opt/jboss/sqrl-server
-             - ./volumes/idp-server/pre-deploy:/opt/jboss/keycloak/pre-deploy
-             - ./volumes/idp-server/data:/opt/jboss/keycloak/standalone/data
+            # Startup script is stored in this directory.
+            - ./volumes/idp-server/pre-deploy:/opt/jboss/keycloak/pre-deploy
+            # Directory for the storage of keycloak generated configuration for sqrl-server
+            - ./volumes/idp-server/data:/opt/jboss/keycloak/standalone/data
         environment:
             JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8787
             MONGO_HOST: mongo
-            idphost: keycloak
-            idpport: 8080
-            IDP_CONFIG_DIR: /opt/jboss/idp-post-deploy/generated
+            IDP_CONFIG_DIR: /opt/jboss/keycloak/standalone/data
         env_file:
+            # For the productive environment, these properties muss be passed to the docker container -e
             - ./volumes/sqrl-server/sqrl-server.properties
         depends_on:
             - mongo
-        entrypoint: /opt/jboss/keycloak/pre-deploy/docker-entrypoint-dev.sh
+        entrypoint: /opt/jboss/keycloak/pre-deploy/docker-entrypoint.sh
         command: -b 0.0.0.0 -bmanagement 0.0.0.0 -c standalone-ha.xml
             

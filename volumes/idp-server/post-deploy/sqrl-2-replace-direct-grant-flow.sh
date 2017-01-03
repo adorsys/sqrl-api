@@ -20,7 +20,6 @@ while [ "$TKN" == 'test' ]; do
 	  TKN=`echo $RESP | sed 's/.*access_token":"//g' | sed 's/".*//g'`
 	  echo "Idp is ready"
 	else
-	  cat tmp.txt
 	  echo "Still waiting for idp to be ready"
 	  sleep 2
 	fi
@@ -30,4 +29,4 @@ done
 REALM_RECORD=$(curl -s "http://$hostAndPort/auth/admin/realms/master" -H "Authorization: Bearer $TKN")
 REALM_RECORD=`echo $REALM_RECORD | sed 's/"directGrantFlow":"direct grant"/"directGrantFlow":"sqrl"/'`
 
-curl -v -X PUT "http://$hostAndPort/auth/admin/realms/master" -H "Content-Type: application/json;charset=UTF-8" -H "Authorization: Bearer $TKN" -d "$REALM_RECORD"
+curl -s -X PUT "http://$hostAndPort/auth/admin/realms/master" -H "Content-Type: application/json;charset=UTF-8" -H "Authorization: Bearer $TKN" -d "$REALM_RECORD"

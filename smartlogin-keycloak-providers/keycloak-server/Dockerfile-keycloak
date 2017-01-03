@@ -2,15 +2,20 @@ FROM jboss/keycloak:2.4.0.Final
 
 ENV JBOSS_HOME /opt/jboss/keycloak
 
-# modules
+# modules shall not be needed for sqrl integration. But put it here 
 ADD target/keycloak-server/account-resource.tar.gz $JBOSS_HOME/modules/system/layers/base
+
+# THis is the keycloack extension for a modified direct grant module that supports
+# sqrl nut and accessTokenId as alternative to username and password.
 ADD target/keycloak-server/direct-grant.tar.gz $JBOSS_HOME/modules/system/layers/base
 
-# sqrl modules
+# sqrl server module shall be deploy in the same domain as the keycloak module to vaoid CORS issues
 ADD target/keycloak-server/smartlogin-server.war $JBOSS_HOME/standalone/deployments/
+
+# Sample client module can be deployed o a proper server
 ADD target/keycloak-server/smartlogin-web-sample.war $JBOSS_HOME/standalone/deployments/
 
-# h2 for access to keycloak database.
+# h2 for access to keycloak database. Just for debugging
 ADD lib/h2console.war $JBOSS_HOME/standalone/deployments/
 ADD lib/.h2.server.properties /opt/jboss/
 

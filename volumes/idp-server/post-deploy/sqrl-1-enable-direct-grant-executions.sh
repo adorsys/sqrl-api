@@ -20,7 +20,6 @@ while [ "$TKN" == 'test' ]; do
 	  TKN=`echo $RESP | sed 's/.*access_token":"//g' | sed 's/".*//g'`
 	  echo "Idp is ready"
 	else
-	  cat tmp.txt
 	  echo "Still waiting for idp to be ready"
 	  sleep 2
 	fi
@@ -40,9 +39,9 @@ SQRL_AUTH=`echo $SQRL_AUTH | sed 's/"requirement":"DISABLED"/"requirement":"REQU
 UNAME_AUTH=`echo $UNAME_AUTH | sed 's/"requirement":"DISABLED"/"requirement":"REQUIRED"/'`
 PWD_AUTH=`echo $PWD_AUTH | sed 's/"requirement":"DISABLED"/"requirement":"REQUIRED"/'`
 
-curl -X PUT "http://$hostAndPort/auth/admin/realms/master/authentication/flows/sqrl/executions" -H "Content-Type: application/json;charset=UTF-8" -H "Authorization: Bearer $TKN" -d "$SQRL_AUTH"
-curl -X PUT "http://$hostAndPort/auth/admin/realms/master/authentication/flows/sqrl/executions" -H "Content-Type: application/json;charset=UTF-8" -H "Authorization: Bearer $TKN" -d "$UNAME_AUTH"
-curl -X PUT "http://$hostAndPort/auth/admin/realms/master/authentication/flows/sqrl/executions" -H "Content-Type: application/json;charset=UTF-8" -H "Authorization: Bearer $TKN" -d "$PWD_AUTH"
+curl -s -X PUT "http://$hostAndPort/auth/admin/realms/master/authentication/flows/sqrl/executions" -H "Content-Type: application/json;charset=UTF-8" -H "Authorization: Bearer $TKN" -d "$SQRL_AUTH"
+curl -s -X PUT "http://$hostAndPort/auth/admin/realms/master/authentication/flows/sqrl/executions" -H "Content-Type: application/json;charset=UTF-8" -H "Authorization: Bearer $TKN" -d "$UNAME_AUTH"
+curl -s -X PUT "http://$hostAndPort/auth/admin/realms/master/authentication/flows/sqrl/executions" -H "Content-Type: application/json;charset=UTF-8" -H "Authorization: Bearer $TKN" -d "$PWD_AUTH"
 
 # cleanup
 # rm tmp.txt  

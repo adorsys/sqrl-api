@@ -68,8 +68,8 @@ public class IdpResource {
     	String clientConfigFileName = clientId+".json";
     	
     	String externaldpHostAndPort = EnvProperties.getEnvProp(EXTERNAL_IDP_HOST_AND_PORT, false);
-    	String internalIdpHost=EnvProperties.getEnvProp(IDPHOST, false);
-    	String internalIdpPort=EnvProperties.getEnvProp(IDPPORT, true);
+    	String internalIdpHost=EnvProperties.getEnvProp(IDPHOST, "localhost");
+    	String internalIdpPort=EnvProperties.getEnvProp(IDPPORT, "8080");
     	String internalIdpHostAndPort = internalIdpHost + (internalIdpPort!=null?":"+internalIdpPort:"");
     	Map<String, String> replace = new HashMap<>();
     	replace.put(internalIdpHostAndPort, externaldpHostAndPort);

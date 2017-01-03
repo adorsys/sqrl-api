@@ -36,7 +36,6 @@ while [ "$TKN" == 'test' ]; do
 	  TKN=`echo $RESP | sed 's/.*access_token":"//g' | sed 's/".*//g'`
 	  echo "Idp is ready"
 	else
-	  cat tmp.txt
 	  echo "Still waiting for idp to be ready"
 	  sleep 2
 	fi
@@ -50,7 +49,7 @@ createUserTaget="http://$hostAndPort/auth/admin/realms/master/users/"
 echo $createUserTaget
 curl -s -X POST $createUserTaget -H "Content-Type: application/json;charset=UTF-8" -H "Authorization: Bearer $TKN" -d $data -D tmp.txt
 
-cat tmp.txt
+# cat tmp.txt
 
 location=`awk '/users/{print $NF}' tmp.txt`	 
 location=`echo $location | tr -d '\r'`

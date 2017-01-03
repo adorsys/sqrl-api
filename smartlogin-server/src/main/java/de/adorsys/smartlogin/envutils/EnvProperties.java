@@ -11,4 +11,13 @@ public class EnvProperties {
     	}
     	return propValue;
     }
+
+    public static String getEnvProp(String propName, String defaultValue){
+    	String propValue = System.getenv(propName);
+    	
+    	if(propValue==null || propValue.trim().length()==0) {
+    		return defaultValue;
+    	}
+    	return propValue;
+    }
 }

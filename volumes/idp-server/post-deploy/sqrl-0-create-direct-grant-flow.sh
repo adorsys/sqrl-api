@@ -20,13 +20,12 @@ while [ "$TKN" == 'test' ]; do
 	  TKN=`echo $RESP | sed 's/.*access_token":"//g' | sed 's/".*//g'`
 	  echo "Idp is ready"
 	else
-	  cat tmp.txt
 	  echo "Still waiting for idp to be ready"
 	  sleep 2
 	fi
 done
 
-curl -v -X POST "http://$hostAndPort/auth/admin/realms/master/authentication/flows" -H 'Content-Type: application/json;charset=UTF-8' -H "Authorization: Bearer $TKN" -d '{"alias": "sqrl","description": "OpenID Connect Resource Owner Grant","providerId": "basic-flow","topLevel": true,"builtIn": false}'
-curl -v -X POST "http://$hostAndPort/auth/admin/realms/master/authentication/flows/sqrl/executions/execution" -H "Content-Type: application/json;charset=UTF-8" -H "Authorization: Bearer $TKN" -d '{"provider":"smartlogin-drct-grnt-sqrl-login"}'
-curl -v -X POST "http://$hostAndPort/auth/admin/realms/master/authentication/flows/sqrl/executions/execution" -H "Content-Type: application/json;charset=UTF-8" -H "Authorization: Bearer $TKN" -d '{"provider":"smartlogin-drct-grnt-username"}'
-curl -v -X POST "http://$hostAndPort/auth/admin/realms/master/authentication/flows/sqrl/executions/execution" -H "Content-Type: application/json;charset=UTF-8" -H "Authorization: Bearer $TKN" -d '{"provider":"smartlogin-drct-grnt-password"}'
+curl -s -X POST "http://$hostAndPort/auth/admin/realms/master/authentication/flows" -H 'Content-Type: application/json;charset=UTF-8' -H "Authorization: Bearer $TKN" -d '{"alias": "sqrl","description": "OpenID Connect Resource Owner Grant","providerId": "basic-flow","topLevel": true,"builtIn": false}'
+curl -s -X POST "http://$hostAndPort/auth/admin/realms/master/authentication/flows/sqrl/executions/execution" -H "Content-Type: application/json;charset=UTF-8" -H "Authorization: Bearer $TKN" -d '{"provider":"smartlogin-drct-grnt-sqrl-login"}'
+curl -s -X POST "http://$hostAndPort/auth/admin/realms/master/authentication/flows/sqrl/executions/execution" -H "Content-Type: application/json;charset=UTF-8" -H "Authorization: Bearer $TKN" -d '{"provider":"smartlogin-drct-grnt-username"}'
+curl -s -X POST "http://$hostAndPort/auth/admin/realms/master/authentication/flows/sqrl/executions/execution" -H "Content-Type: application/json;charset=UTF-8" -H "Authorization: Bearer $TKN" -d '{"provider":"smartlogin-drct-grnt-password"}'

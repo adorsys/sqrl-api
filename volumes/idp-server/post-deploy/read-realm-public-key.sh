@@ -19,14 +19,14 @@ while [ "$TKN" == 'test' ]; do
 	  TKN=`echo $RESP | sed 's/.*access_token":"//g' | sed 's/".*//g'`
 	  echo "Idp is ready"
 	else
-	  cat tmp.txt
 	  echo "Still waiting for idp to be ready"
 	  sleep 2
 	fi
 done
 
 # read public key and stroe in file realm-master-keys.json
-curl -s "http://$hostAndPort/auth/admin/realms/master/keys" -H "Authorization: Bearer $TKN" -H 'Accept: application/json, text/plain, */*' -D response-header.txt > /opt/jboss/idp-post-deploy/generated/realm-master-keys.json
+jsonFile=`echo "/sqrl-server/generated/realm-master-keys.json"`
+curl -s "http://$hostAndPort/auth/admin/realms/master/keys" -H "Authorization: Bearer $TKN" -H 'Accept: application/json, text/plain, */*' -D response-header.txt > $jsonFile
 
 # cleanup
 # rm response-header.txt 
