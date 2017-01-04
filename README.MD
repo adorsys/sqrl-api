@@ -28,9 +28,45 @@ sqrl> docker-machine ls
 sqrl      *        virtualbox   Running   tcp://192.168.99.100:2376           v1.12.5 
 ...
 
-# Start server farm
-sqrl> docker-compose up
+# Build the keycloak docker image
+sqrl> cd smartlogin-keycloak-providers/keycloak-server
+keycloak-server> ./docker-build-keycloak
+keycloak-server> cd -
 
+# Set up the application to write you external url in the qrcode for your phone scan to work against your dev environment.
+sqrl > vi volumes/sqrl-server/sqrl-server.properties
+
+# SQRL_PUBLIC_BASE_URL=http://192.168.1.15:8081
+# 192.168.1.15 is the external IP of your machine.
+# Configure you docker environment so you can map http://192.168.1.15:8081 localy this to http://sqrl:8081
+# See virtualbox-access.png
+
+
+
+# Then start the application
+# First start of server (simple restart with  $> docker-compose up)
+sqrl> docker-compose -f docker-compose-clean.yml up
+
+# Start application
+http://sqrl:8081/smartlogin-web-sample/#!/home
+
+# Got to login and login with francis/francis or alex/alex 
+# Go to link and register your phone
+
+# Start a new Session
+# go to login and login with your phone.
+
+
+
+
+
+
+
+########
+#
+# Just for development.
+#
+########
 # Application Development Cycle. In orther to enable faster roundtrip, all application and 
 # keycloak modules are installed trhu de admin console. So changes can be applied using wildfly:deploy
 
