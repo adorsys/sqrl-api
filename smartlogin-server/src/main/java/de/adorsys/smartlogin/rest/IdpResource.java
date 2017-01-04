@@ -68,11 +68,12 @@ public class IdpResource {
     	String clientConfigFileName = clientId+".json";
     	
     	String externaldpHostAndPort = EnvProperties.getEnvProp(EXTERNAL_IDP_HOST_AND_PORT, false);
-    	String internalIdpHost=EnvProperties.getEnvProp(IDPHOST, "localhost");
-    	String internalIdpPort=EnvProperties.getEnvProp(IDPPORT, "8080");
-    	String internalIdpHostAndPort = internalIdpHost + (internalIdpPort!=null?":"+internalIdpPort:"");
+    	String internalIdpHostAndPort = "localhost:8080";
+    	String keycloakIdpHostAndPort = "keycloak:8080";
+    	
     	Map<String, String> replace = new HashMap<>();
     	replace.put(internalIdpHostAndPort, externaldpHostAndPort);
+    	replace.put(keycloakIdpHostAndPort, externaldpHostAndPort);
     	
     	String clientConfigContent = null; 
     	try {

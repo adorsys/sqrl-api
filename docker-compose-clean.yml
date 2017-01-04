@@ -12,7 +12,7 @@ services:
         environment:
             idphost: keycloak
             idpport: 8080
-            IDP_CONFIG_DIR: /sqrl-server/generated
+            IDP_CONFIG_DIR: /idp-server/data
         depends_on:
             - keycloak
         command:
