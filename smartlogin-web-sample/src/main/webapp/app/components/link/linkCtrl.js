@@ -1,6 +1,4 @@
-function LinkCtrl($scope, SQRLManagementService, $rootScope, $state) {
-
-//    var userId = "test-user"
+function LinkCtrl($scope, SQRLManagementService, $rootScope) {
 
     $scope.sqrl = {
         prepared: false,

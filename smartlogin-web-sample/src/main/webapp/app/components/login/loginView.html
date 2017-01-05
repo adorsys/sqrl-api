@@ -1,32 +1,19 @@
 <div class="row" id="legend">
-	<legend class="">Login</legend>
+	<legend class="col-sm-4">Login</legend>
 </div>
-<div class="row" id="sqrl-wrap">
+<div class="row">
 	<div class="col-sm-4">
-		<fieldset>
-			<div class="control-group">
-				<!-- Username -->
-				<label class="control-label" for="username">Username</label>
-				<div class="controls">
-					<input type="text" id="username" name="username" ng-model="username" placeholder=""
-						class="input-xlarge">
-				</div>
+		<form>
+			<div class="form-group">
+				<label for="inputEmail">Username</label>
+				<input type="email" class="form-control" id="inputEmail" ng-model="username" placeholder="Username">
 			</div>
-			<div class="control-group">
-				<!-- Password-->
-				<label class="control-label" for="password">Password</label>
-				<div class="controls">
-					<input type="password" id="password" name="password" placeholder="" ng-model="password"
-						class="input-xlarge">
-				</div>
+			<div class="form-group">
+				<label for="inputPassword">Password</label>
+				<input type="password" class="form-control" id="inputPassword" ng-model="password" placeholder="Password">
 			</div>
-			<div class="control-group">
-				<!-- Button -->
-				<div class="controls">
-					<button class="btn btn-success" ng-click="login(username, password)">Login</button>
-				</div>
-			</div>
-		</fieldset>
+			<button type="submit" class="btn btn-default" ng-click="login(username, password)">Login</button>
+		</form>
 	</div>
 	<div class="col-sm-4">
 		<a ng-href="{{sqrl.sqrlUrl}}" id="sqrl-link"> <img id="sqrl-qr"

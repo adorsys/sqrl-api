@@ -1,11 +1,19 @@
 <div class="row" id="legend">
-	<legend class="">Scan to register your device.</legend>
+    <legend class="col-sm-4">Scan to register your device</legend>
 </div>
-<div class="row" id="sqrl-wrap">
-    <div class="col-sm-4">
+<div class="row">
+    <div class="col-sm-4" ng-if="token">
         <a ng-href="{{sqrl.uri}}" id="sqrl-link">
             <img id="sqrl-qr" ng-src="{{sqrl.qr}}" alt="Smart Login Code" style="max-width: 100%"/>
         </a>
         <div class="alert alert-success" ng-if="sqrl.linkSucceeded">Link Succeeded</div>
+    </div>
+    <div class="col-sm-4" ng-if="!token">
+        <button class="btn btn-success" ui-sref="home.login">Login</button>
+    </div>
+</div>
+<div class="row">
+    <div>
+        <div class="alert alert-warn" ng-if="!token">No token, please login</div>
     </div>
 </div>

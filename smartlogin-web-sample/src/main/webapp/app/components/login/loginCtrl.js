@@ -1,4 +1,4 @@
-function LoginCtrl($scope, $http, SQRLLoginService, $state, $rootScope) {
+function LoginCtrl($scope, $http, SQRLLoginService, $state, $rootScope, constants) {
 
     var clientId = "sqrl-web-client"
 
@@ -45,7 +45,7 @@ function LoginCtrl($scope, $http, SQRLLoginService, $state, $rootScope) {
     
     $scope.login = function(username, password, successCallback){
         // Read json config of server
-        $http.get('/smartlogin-server/rest/idp/sqrl-web-client/client-config'        
+        $http.get(constants.SQRL_HOST+'/smartlogin-server/rest/idp/sqrl-web-client/client-config'
         ).then(
     		function(response){
     			$scope.clientConfig = response.data;
@@ -81,7 +81,7 @@ function LoginCtrl($scope, $http, SQRLLoginService, $state, $rootScope) {
     
     $scope.sqrlLogin = function(nut, accessTokenId, successCallback){
         // Read json config of server
-        $http.get('/smartlogin-server/rest/idp/sqrl-web-client/client-config'        
+        $http.get(constants.SQRL_HOST+'/smartlogin-server/rest/idp/sqrl-web-client/client-config'
         ).then(
     		function(response){
     			$scope.clientConfig = response.data;
@@ -114,13 +114,13 @@ function LoginCtrl($scope, $http, SQRLLoginService, $state, $rootScope) {
     		}
         );    	
     };    
-    $http.get('/smartlogin-server/rest/auth/sqrl-uri').then(
+    $http.get(constants.SQRL_HOST+'/smartlogin-server/rest/auth/sqrl-uri').then(
         function (response) {
             var nutParam = response.data.substring(response.data.indexOf("?") + 1);
             $scope.sqrl.sqrlNut = nutParam.substring(nutParam.indexOf('=') + 1);
             $scope.sqrl.sqrlUrl = response.data;
-            $scope.sqrl.sqrlQr = '/smartlogin-server/rest/auth/sqrl-qr-code?' + nutParam;
-            $scope.sqrl.sqrlResp = '/smartlogin-server/rest/auth/sqrl-response?' + nutParam;
+            $scope.sqrl.sqrlQr = constants.SQRL_HOST+'/smartlogin-server/rest/auth/sqrl-qr-code?' + nutParam;
+            $scope.sqrl.sqrlResp = constants.SQRL_HOST+'/smartlogin-server/rest/auth/sqrl-response?' + nutParam;
 
             SQRLLoginService.setup($scope.sqrl.sqrlUrl);
 

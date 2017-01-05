@@ -1,4 +1,4 @@
-var SQRLManagementService = function ($http, $interval) {
+var SQRLManagementService = function ($http, $interval, constants) {
     var service = {
         baseUri: undefined,
         nut: "#",
@@ -21,7 +21,7 @@ var SQRLManagementService = function ($http, $interval) {
     };
 
     service.setup = function () {
-        service.baseUri = "/smartlogin-server/rest/auth";
+        service.baseUri = constants.SQRL_HOST + "/smartlogin-server/rest/auth";
 
         return $http.get(service.baseUri + "/sqrl-uri").then(function (response) {
             var qmIndex = response.data.indexOf("?");
