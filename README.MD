@@ -1,56 +1,58 @@
-Prototype of a standalone sqrl server working with keycloack
+# Prototype of a standalone sqrl server working with keycloack
 
 Building:
 
-> mvn clean install
+$ mvn clean install
 
-Prepare docker environment:
+Prepare docker environment
 
-# Create a docker-host using docker machine. I named it sqrl to isolate it from other hosts on my development environment.
-sqrl> docker-machine create -d virtualbox sqrl
+Create a docker-host using docker machine. I named it sqrl to isolate it from other hosts on my development environment.
+sqrl$ docker-machine create -d virtualbox sqrl
 
-# List hosts
-sqrl> docker-machine ls
+List hosts
+sqrl$ docker-machine ls
 ...
 sqrl      -        virtualbox   Running   tcp://192.168.99.100:2376           v1.12.5
 ...
 
-# Prepare access to host
-# In my /etc/hosts I put this: 
+Prepare access to host
+In my /etc/hosts I put this: 
 192.168.99.100 sqrl
 
-# attach this console to docker-host
-sqrl> eval $(docker-machine env sqrl)
+attach this console to docker-host
+sqrl$ eval $(docker-machine env sqrl)
 
-# Verify
-sqrl> docker-machine ls
+Verify
+sqrl$ docker-machine ls
 ...
 sqrl      *        virtualbox   Running   tcp://192.168.99.100:2376           v1.12.5 
 ...
 
-# Build the keycloak docker image
-sqrl> cd smartlogin-keycloak-providers/keycloak-server
-keycloak-server> ./docker-build-keycloak
-keycloak-server> cd -
+Build the keycloak docker image
 
-# Set up the application to write you external url in the qrcode for your phone scan to work against your dev environment.
-sqrl > vi volumes/sqrl-server/sqrl-server.properties
+sqrl$ cd smartlogin-keycloak-providers/keycloak-server
+keycloak-server$ ./docker-build-keycloak
+keycloak-server$ cd -
 
-# SQRL_PUBLIC_BASE_URL=http://192.168.1.15:8081
-# 192.168.1.15 is the external IP of your machine.
-# Configure you docker environment so you can map http://192.168.1.15:8081 localy this to http://sqrl:8081
-# See virtualbox-access.png
+Set up the application to write you external url in the qrcode for your phone scan to work against your dev environment.
+
+sqrl$ vi volumes/sqrl-server/sqrl-server.properties
+
+SQRL_PUBLIC_BASE_URL=http://192.168.1.15:8081
+192.168.1.15 is the external IP of your machine.
+Configure you docker environment so you can map http://192.168.1.15:8081 localy this to http://sqrl:8081
+See virtualbox-access.png
 
 
 
 # Then start the application
 # First start of server (simple restart with  $> docker-compose up)
-sqrl> docker-compose -f docker-compose-clean.yml up
+sqrl$ docker-compose -f docker-compose-clean.yml up
 
 # Start application
 http://sqrl:8081/smartlogin-web-sample/#!/home
 
-# Got to login and login with francis/francis or alex/alex 
+# Got to login and login with francis@mail.de/francis or alex@mail.de/alex or roman@mail.de/roman 
 # Go to link and register your phone
 
 # Start a new Session

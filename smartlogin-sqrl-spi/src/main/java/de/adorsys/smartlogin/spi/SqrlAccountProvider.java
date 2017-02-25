@@ -1,7 +1,5 @@
 package de.adorsys.smartlogin.spi;
 
-import de.adorsys.smartlogin.db.SqrlAccount;
-
 /**
  * Created by alexg on 07.12.16.
  */
@@ -19,7 +17,7 @@ public interface SqrlAccountProvider {
 
     String checkIdentity(byte[] identityKey);
 
-    void createSqrlAccount(SqrlAccount sqrlAccount);
+    void createSqrlAccount(String idpAccountId);
 
     boolean accountExistsBySqrlAccountId(String id);
 

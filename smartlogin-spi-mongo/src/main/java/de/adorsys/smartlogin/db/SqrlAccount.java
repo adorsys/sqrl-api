@@ -3,12 +3,14 @@ package de.adorsys.smartlogin.db;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.*;
 
+import de.adorsys.smartlogin.spi.SqrlAccountIF;
+
 /**
  * Created by alexg on 22.12.16.
  */
 @Entity(value = "account", noClassnameStored = true)
 @Indexes({@Index(fields = @Field(value = SqrlAccount.Fields.ACCOUNT_SQRL_KEY_IDENTITY)) })
-public class SqrlAccount {
+public class SqrlAccount implements SqrlAccountIF {
 
     public interface Fields {
         String ID = "_id";

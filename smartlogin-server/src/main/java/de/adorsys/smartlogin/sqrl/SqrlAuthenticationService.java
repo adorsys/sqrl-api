@@ -17,7 +17,6 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.adorsys.smartlogin.db.SqrlAccount;
 import de.adorsys.smartlogin.spi.SqrlAccountProvider;
 import net.vrallev.java.sqrl.SqrlException;
 import net.vrallev.java.sqrl.SqrlProtocol;
@@ -309,7 +308,8 @@ public class SqrlAuthenticationService {
             	
                 //TODO IDP/Keycloak handling account must exist - lazy creating sqrl account?
                 if (!sqrlAccountProvider.accountExistsByIdpAccountId(userLogin)) {
-                    sqrlAccountProvider.createSqrlAccount(new SqrlAccount().idpAccountId(userLogin));
+                	// idp account id = userLogin
+                    sqrlAccountProvider.createSqrlAccount(userLogin);
                 }
 
                 byte[] serverUnlockKey = clientBody.getClientParameter().getServerUnlockKeyDecoded();

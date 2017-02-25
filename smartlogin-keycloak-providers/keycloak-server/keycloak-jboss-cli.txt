@@ -16,12 +16,17 @@ batch
 
 # Move scheduling service db to keycloak database.
 /subsystem=ee/service=default-bindings:write-attribute(name=datasource, value="java:jboss/datasources/KeycloakDS")
+
 # Remove the fake ExampleDS
 /subsystem=datasources/data-source=ExampleDS:remove
 
 # Move KeycloakDS data location to volumes outside of container so we can preserve data on container restart and decide when to cleanup
 /subsystem=datasources/data-source=KeycloakDS:write-attribute(name=connection-url, value="jdbc:h2:/opt/jboss/keycloak/standalone/data/h2/keycloak;AUTO_SERVER=TRUE")
 
+# add sqrl datasource
+/subsystem=datasources/data-source=SQRLDS:add(jndi-name=java:jboss/datasources/SQRLDS,enabled="true",use-java-context=true,connection-url="jdbc:h2:/opt/jboss/keycloak/standalone/data/h2/sqrl;AUTO_SERVER=TRUE",driver-name=h2,user-name="sa",password="sa")
+
+# add weld
 /subsystem=weld:add
 
 run-batch

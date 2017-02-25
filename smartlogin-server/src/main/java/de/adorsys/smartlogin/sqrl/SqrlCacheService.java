@@ -90,7 +90,7 @@ public class SqrlCacheService {
 			sqrlProcessData.setState(SqrlState.values()[state]);
 			sqrlProcessData.setPrepareData(new SqrlAuthenticationPreparationData(prep));
 
-			if (resp != null) {
+			if (resp != null && !resp.isEmpty()) {
 				sqrlProcessData.setResponse(
 						new SqrlResponse(resp.get(SqrlResponse.Fields.ACCESS_TOKEN_ID),
 								Long.valueOf(resp.get(SqrlResponse.Fields.EXPIRATION_DURATION))));

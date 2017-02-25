@@ -1,13 +1,14 @@
 package de.adorsys.smartlogin.db;
 
-import de.adorsys.smartlogin.spi.SqrlAccountProvider;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import de.adorsys.smartlogin.spi.SqrlAccountProvider;
 
 /**
  * Created by alexg on 22.12.16.
@@ -18,8 +19,8 @@ public class SqrlAccountRepository implements SqrlAccountProvider {
     @Inject
     private Datastore datastore;
 
-    public void createSqrlAccount(SqrlAccount sqrlAccount) {
-        datastore.save(sqrlAccount);
+    public void createSqrlAccount(String idpAccountId) {
+        datastore.save(new SqrlAccount().idpAccountId(idpAccountId));
     }
 
     public boolean accountExistsBySqrlAccountId(String accountId) {
