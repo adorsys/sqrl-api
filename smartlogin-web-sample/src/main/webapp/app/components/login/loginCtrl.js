@@ -74,47 +74,39 @@ function LoginCtrl($scope, $http, SQRLLoginService, $state, $rootScope, constant
     };
 
     $scope.sqrlLogin = function (nut, accessTokenId, successCallback) {
-        // Read json config of server
-        $http.get(constants.SQRL_HOST + '/smartlogin-server/rest/idp/' + constants.IDP_CLIENT_ID + '/client-config'
+        $http(
+            {
+                method: 'POST',
+                url: constants.IDP_HOST + '/realms/' + constants.IDP_CLIENT_ID + '/protocol/openid-connect/token',
+                data: {
+                    'username': 'anonymous',
+                    'password': 'anonymous',
+                    'nut': nut,
+                    'accessTokenId': accessTokenId,
+                    'grant_type': 'password',
+                    'client_id': constants.IDP_CLIENT_ID
+                },
+                headers: {'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json'},
+                transformRequest: $scope.transformRequest
+            }
         ).then(
-            function (response) {
-                $scope.clientConfig = response.data;
-                $scope.url = $scope.clientConfig['auth-server-url'];
-                $http(
-                    {
-                        method: 'POST',
-                        url: $scope.url + '/realms/master/protocol/openid-connect/token',
-                        data: {
-                            'username': 'anonymous',
-                            'password': 'anonymous',
-                            'nut': nut,
-                            'accessTokenId': accessTokenId,
-                            'grant_type': 'password',
-                            'client_id': constants.IDP_CLIENT_ID
-                        },
-                        headers: {'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json'},
-                        transformRequest: $scope.transformRequest
-                    }
-                ).then(
-                    function (successResponse) {
-                        $rootScope.token = successResponse.data.access_token;
-                        $scope.sqrl.watcher.unregisterLogin();
-                        if (successCallback) {
-                            successCallback();
-                        } else {
-                            $state.go('home');
-                        }
-                    },
-                    function (errorResponse) {
-                        // todo show response on page.
-                        $scope.status = errorResponse.status;
-                        $scope.statusText = errorResponse.statusText;
-                    }
-                );
-
+            function (successResponse) {
+                $rootScope.token = successResponse.data.access_token;
+                $scope.sqrl.watcher.unregisterLogin();
+                if (successCallback) {
+                    successCallback();
+                } else {
+                    $state.go('home');
+                }
+            },
+            function (errorResponse) {
+                // todo show response on page.
+                $scope.status = errorResponse.status;
+                $scope.statusText = errorResponse.statusText;
             }
         );
     };
+
     $http.get(constants.SQRL_HOST + '/smartlogin-server/rest/auth/sqrl-uri').then(
         function (response) {
             var nutParam = response.data.substring(response.data.indexOf("?") + 1);
