@@ -2,9 +2,6 @@ FROM jboss/keycloak:2.4.0.Final
 
 ENV JBOSS_HOME /opt/jboss/keycloak
 
-# modules shall not be needed for sqrl integration. But put it here 
-ADD target/keycloak-server/account-resource.tar.gz $JBOSS_HOME/modules/system/layers/base
-
 # THis is the keycloack extension for a modified direct grant module that supports
 # sqrl nut and accessTokenId as alternative to username and password.
 ADD target/keycloak-server/direct-grant.tar.gz $JBOSS_HOME/modules/system/layers/base

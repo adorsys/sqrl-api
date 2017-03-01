@@ -30,7 +30,6 @@ services:
             ######
             ## add-direct-grant-client.sh 
             # create a client with clientId sqrl-web-client. This is the client id used to get a token from keycloak
-            # This script store client config info in: $IDP_CONFIG_DIR/sqrl-web-client.json for use by the sqrl server.
             #
             ## read-realm-public-key.sh 
             # export realm public key and store it in the file $IDP_CONFIG_DIR/realm-master-keys.json

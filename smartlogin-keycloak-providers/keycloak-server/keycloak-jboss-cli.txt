@@ -11,7 +11,6 @@ batch
 
 # Install Account resource as a module as a resource 
 # module add --name=system.layers.base.de.adorsys.smartlogin.account-resource --module-xml=modules/system/layers/base/de/adorsys/smartlogin/account-resource/main/module.xml --resources=modules/system/layers/base/de/adorsys/smartlogin/account-resource/main/account-resource.jar
-/subsystem=keycloak-server:list-add(name=providers, value=module:de.adorsys.smartlogin.account-resource)
 /subsystem=keycloak-server:list-add(name=providers, value=module:de.adorsys.smartlogin.direct-grant)
 
 # Move scheduling service db to keycloak database.
