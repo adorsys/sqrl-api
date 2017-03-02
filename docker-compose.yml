@@ -1,6 +1,23 @@
 version: '2'
 # Only  use this file for subsequent starts
-services:   
+services:
+    wildfly:
+      image: jboss/wildfly:10.1.0.Final
+      links:
+        - keycloak
+      ports:
+        - "8080:8080"
+        - "9990:9990"
+      volumes:
+        - ./volumes/sqrl-server:/opt/jboss/sqrl-server
+      environment:
+        JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8787
+        idphost: keycloak
+        idpport: 8080
+      env_file:
+        - ./volumes/sqrl-server/sqrl-server.properties
+      depends_on:
+        - keycloak
     keycloak:
         # Keycloak image might be built prior to starting this file.
         image: sqrl/keycloak:1.0.0-SNAPSHOT

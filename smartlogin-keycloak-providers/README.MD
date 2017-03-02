@@ -1,1 +1,1 @@
-Keycloak provideres for smatr login
+Keycloak provideres for smart login

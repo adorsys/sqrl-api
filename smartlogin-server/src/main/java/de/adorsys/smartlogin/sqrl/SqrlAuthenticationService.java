@@ -1,22 +1,5 @@
 package de.adorsys.smartlogin.sqrl;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.Response;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.adorsys.smartlogin.spi.SqrlAccountProvider;
 import net.vrallev.java.sqrl.SqrlException;
 import net.vrallev.java.sqrl.SqrlProtocol;
@@ -24,6 +7,16 @@ import net.vrallev.java.sqrl.body.ServerParameter;
 import net.vrallev.java.sqrl.body.SqrlClientBody;
 import net.vrallev.java.sqrl.body.SqrlClientBodyParser;
 import net.vrallev.java.sqrl.body.SqrlServerBody;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * The SQRL client's interface to the SQRL auth.<br>
@@ -296,13 +289,12 @@ public class SqrlAuthenticationService {
                     .withServerFriendlyName(FRIENDLY_SERVER_NAME).create().asSqrlServerBody();
         }
 
-        String userLogin = processData.getPreparedData().findValue(PREPARED_FIELD_USER_LOGIN);
-
         byte[] storedServerUnlockKey = sqrlAccountProvider.fetchServerUnlockKey(keys.idk);
         byte[] storedVerifyUnlockKey = sqrlAccountProvider.fetchVerifyUnlockKey(keys.idk);
 
         if (storedServerUnlockKey == null && storedVerifyUnlockKey == null) {
-            if (userLogin != null) { 
+            String userLogin = processData.getPreparedData().findValue(PREPARED_FIELD_USER_LOGIN);
+            if (userLogin != null) {
             	// No need to check for existence of user login with idp
             	// user login is derived from legitimated bearer token.
             	

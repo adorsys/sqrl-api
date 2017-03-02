@@ -1,10 +1,10 @@
 package de.adorsys.smartlogin.sqrl;
 
-import java.nio.charset.Charset;
-
 import android.util.changed.Base64;
 import net.vrallev.java.sqrl.SqrlProtocol;
 import net.vrallev.java.sqrl.util.SqrlCipherTool;
+
+import java.nio.charset.Charset;
 
 /**
  * A factory for creating cryptographic strong unique strings called "nuts".

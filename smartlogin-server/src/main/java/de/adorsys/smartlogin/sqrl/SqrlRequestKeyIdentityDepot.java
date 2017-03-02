@@ -1,8 +1,7 @@
 package de.adorsys.smartlogin.sqrl;
 
-import java.io.Serializable;
-
 import javax.enterprise.context.RequestScoped;
+import java.io.Serializable;
 
 /**
  * Store for client identity keys.

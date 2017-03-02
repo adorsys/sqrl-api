@@ -1,0 +1,12 @@
+# This file provides an offline configuration of keycloak based original docker image from docker hub
+embed-server --server-config=standalone-ha.xml
+
+batch
+
+# Remove the fake ExampleDS
+#/subsystem=datasources/data-source=ExampleDS:remove
+
+# add sqrl datasource
+/subsystem=datasources/data-source=SQRLDS:add(jndi-name=java:jboss/datasources/SQRLDS,enabled="true",use-java-context=true,connection-url="jdbc:h2:/opt/jboss/wildfly/standalone/data/h2/sqrl;AUTO_SERVER=TRUE",driver-name=h2,user-name="sa",password="sa")
+
+run-batch

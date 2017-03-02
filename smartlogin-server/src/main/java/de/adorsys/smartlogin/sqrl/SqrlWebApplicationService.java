@@ -1,15 +1,8 @@
 package de.adorsys.smartlogin.sqrl;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-
+import de.adorsys.smartlogin.idp.IdpKeyReader;
+import de.adorsys.smartlogin.spi.SqrlAccountProvider;
+import net.glxn.qrgen.QRCode;
 import org.apache.commons.lang3.StringUtils;
 import org.keycloak.jose.jws.JWSInput;
 import org.keycloak.jose.jws.JWSInputException;
@@ -17,9 +10,14 @@ import org.keycloak.representations.JsonWebToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.adorsys.smartlogin.idp.IdpKeyReader;
-import de.adorsys.smartlogin.spi.SqrlAccountProvider;
-import net.glxn.qrgen.QRCode;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * The web client's interface to the SQRL auth.<br>
@@ -106,7 +104,7 @@ public class SqrlWebApplicationService {
 			if(jwt!=null){
 				String subject = jwt.getSubject();
 				data.getData().put("userId", subject);
-				data.getData().put("realmName", "master");
+				data.getData().put("realmName", realmName);
 			}
 		} catch (JWSInputException | IOException e) {
 			LOG.error("Can not read or verify token", e);

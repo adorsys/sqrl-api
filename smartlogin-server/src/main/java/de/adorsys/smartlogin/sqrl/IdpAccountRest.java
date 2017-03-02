@@ -1,5 +1,7 @@
 package de.adorsys.smartlogin.sqrl;
 
+import de.adorsys.smartlogin.spi.IdpAccountProvider;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.client.Client;
@@ -8,8 +10,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-
-import de.adorsys.smartlogin.spi.IdpAccountProvider;
 
 @ApplicationScoped
 public class IdpAccountRest implements IdpAccountProvider {

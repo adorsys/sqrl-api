@@ -1,6 +1,13 @@
 package de.adorsys.smartlogin.rest;
 
-import java.util.Map;
+import de.adorsys.smartlogin.rest.vo.SqrlLoginCredentials;
+import de.adorsys.smartlogin.rest.vo.SqrlLoginInfo;
+import de.adorsys.smartlogin.spi.SqrlAccountProvider;
+import de.adorsys.smartlogin.sqrl.SqrlCacheService;
+import de.adorsys.smartlogin.sqrl.SqrlProcessData;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -9,16 +16,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import de.adorsys.smartlogin.rest.vo.SqrlLoginCredentials;
-import de.adorsys.smartlogin.rest.vo.SqrlLoginInfo;
-import de.adorsys.smartlogin.spi.SqrlAccountProvider;
-import de.adorsys.smartlogin.sqrl.SqrlCacheService;
-import de.adorsys.smartlogin.sqrl.SqrlProcessData;
+import java.util.Map;
 
 @Path("local")
 @ApplicationScoped
