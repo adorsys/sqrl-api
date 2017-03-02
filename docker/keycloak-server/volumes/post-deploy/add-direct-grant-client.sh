@@ -33,7 +33,7 @@ while [ "$TKN" == 'test' ]; do
 done
 
 # prepare client data
-data="{\"enabled\":true,\"attributes\":{},\"redirectUris\":[],\"clientId\":\"$clientId\",\"clientTemplate\":null,\"protocol\":\"openid-connect\",\"directAccessGrantsEnabled\":true,\"publicClient\":true,\"standardFlowEnabled\":false}"
+data="{\"enabled\":true,\"attributes\":{},\"redirectUris\":[\"*\"],\"webOrigins\":[\"*\"],\"clientId\":\"$clientId\",\"clientTemplate\":null,\"protocol\":\"openid-connect\",\"directAccessGrantsEnabled\":true,\"publicClient\":true,\"standardFlowEnabled\":false}"
 
 # create client
 curl -s -X POST "http://$hostAndPort/auth/admin/realms/master/clients/" -H "Content-Type: application/json;charset=UTF-8" -H "Authorization: Bearer $TKN" -d $data -D tmp.txt
