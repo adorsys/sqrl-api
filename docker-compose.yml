@@ -1,24 +1,77 @@
 version: '2'
-# Only  use this file for subsequent starts
-services:   
+services:
+    # The ci server is to call scripts for the initialization of the keycloak environment.
+    ci-server:
+        # We use centos 7 because it brings bash and curl
+        image: centos:7
+        links:
+            - keycloak
+        volumes:
+             - ./docker/keycloak-server/volumes:/keycloak-server
+        environment:
+            idphost: keycloak
+            idpport: 8080
+            IDP_CONFIG_DIR: /keycloak-server/data
+        depends_on:
+            - keycloak
+        command:
+            ######
+            # Not needed in productive system
+            ######
+            ## wait-for-it.sh
+            # is used to wait for another container to start
+            #
+            ## add-domain-user.sh
+            # create a new user in the keycloak database. Those can be used to test the sqrl process.
+            #
+            ######
+            # Needed for production
+            ######
+            ## add-direct-grant-client.sh
+            # create a client with clientId sqrl-web-client. This is the client id used to get a token from keycloak
+            #
+            ## read-realm-public-key.sh
+            # export realm public key and store it in the file $IDP_CONFIG_DIR/realm-master-keys.json
+            # File is used by the sqrl server to verify the signature of token when registering devices
+            #
+            ## sqrl-i-*-direct-grant*.sh
+            # Used to customize the direct grant flow, so keycloak can understand an SQRL login.
+            #
+            /bin/bash -c "/keycloak-server/wait-for-it.sh keycloak:9090;
+            /keycloak-server/post-deploy/add-domain-user.sh keycloak:8080 francis@mail.de francis;
+            /keycloak-server/post-deploy/add-domain-user.sh keycloak:8080 alex@mail.de alex;
+            /keycloak-server/post-deploy/add-domain-user.sh keycloak:8080 roman@mail.de roman;
+            /keycloak-server/post-deploy/add-direct-grant-client.sh keycloak:8080 sqrl-web-client;
+            /keycloak-server/post-deploy/read-realm-public-key.sh keycloak:8080;
+            /keycloak-server/post-deploy/sqrl-0-create-direct-grant-flow.sh keycloak:8080;
+            /keycloak-server/post-deploy/sqrl-1-enable-direct-grant-executions.sh keycloak:8080;
+            /keycloak-server/post-deploy/sqrl-2-replace-direct-grant-flow.sh keycloak:8080";
     keycloak:
-        # Keycloak image might be built prior to starting this file.
         image: sqrl/keycloak:1.0.0-SNAPSHOT
         ports:
             - "8081:8080"
             - "9991:9990"
             - "8787:8787"
+        environment:
+            JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8787
+            SQRL_ACCOUNT_ENDPOINT: http://sqrl:8080/smartlogin-server/rest/local/check-login
+        entrypoint: /opt/jboss/keycloak/docker-entrypoint.sh
+        command: -b 0.0.0.0 -bmanagement 0.0.0.0 -c standalone-ha.xml
+    sqrl:
+        image: sqrl/sqrl-server:1.0.0-SNAPSHOT
+        links:
+            - keycloak
         volumes:
-            # Startup script is stored in this directory.
-            - ./volumes/idp-server/pre-deploy:/opt/jboss/keycloak/pre-deploy
-            # Directory for the storage of keycloak generated configuration for sqrl-server
-            - ./volumes/idp-server/data:/opt/jboss/keycloak/standalone/data
+            - ./docker/keycloak-server/volumes/data/realm-keys:/opt/jboss/keycloak/standalone/data
+        ports:
+            - "8080:8080"
+            - "9990:9990"
+            - "8788:8787"
         environment:
             JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8787
             IDP_CONFIG_DIR: /opt/jboss/keycloak/standalone/data
-        env_file:
-            # For the productive environment, these properties muss be passed to the docker container -e
-            - ./volumes/sqrl-server/sqrl-server.properties
-        entrypoint: /opt/jboss/keycloak/pre-deploy/docker-entrypoint.sh
+            SQRL_PUBLIC_BASE_URL: http://192.168.1.143:8080
+        depends_on:
+            - keycloak
+        entrypoint: /opt/jboss/wildfly/docker-entrypoint.sh
         command: -b 0.0.0.0 -bmanagement 0.0.0.0 -c standalone-ha.xml
-            

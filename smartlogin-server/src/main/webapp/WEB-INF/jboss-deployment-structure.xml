@@ -1,7 +1,6 @@
 <jboss-deployment-structure>
 	<deployment>
 		<dependencies>
-			<module name="org.keycloak.keycloak-core" />
 			<module name="javax.ws.rs.api" />
 		</dependencies>
 	</deployment>

@@ -1,0 +1,2 @@
+docker build -t sqrl/sqrl-server:1.0.0-SNAPSHOT -f smartlogin-server/Dockerfile ./smartlogin-server
+

@@ -41,7 +41,6 @@
 	</build>
 	<modules>
 		<module>direct-grant</module>
-		<module>keycloak-server</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
@@ -68,8 +67,6 @@
 				<artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
 				<version>${jboss-jaxrs-api_2.0_spec}</version>
 			</dependency>
-
-
 			<dependency>
 				<groupId>org.jboss.logging</groupId>
 				<artifactId>jboss-logging</artifactId>

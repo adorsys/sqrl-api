@@ -1,15 +1,14 @@
 package de.adorsys.smartlogin.sqrl;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import net.glxn.qrgen.QRCode;
+import net.glxn.qrgen.image.ImageType;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-
-import net.glxn.qrgen.QRCode;
-import net.glxn.qrgen.image.ImageType;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Utilities for sqrl url & qr-code generation etc.

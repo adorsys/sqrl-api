@@ -1,0 +1,2 @@
+docker build -t sqrl/keycloak:1.0.0-SNAPSHOT -f keycloak-server/Dockerfile ./keycloak-server
+

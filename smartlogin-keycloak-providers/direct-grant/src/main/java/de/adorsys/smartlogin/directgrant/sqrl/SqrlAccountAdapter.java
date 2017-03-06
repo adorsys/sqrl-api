@@ -12,7 +12,7 @@ public class SqrlAccountAdapter {
 	private WebTarget userFromLoginTemplate;
 	
 	public SqrlAccountAdapter(){
-		String url = System.getenv("sqrl_account_service_endpoint");
+		String url = System.getenv("SQRL_ACCOUNT_ENDPOINT");
 		if(url==null)url="http://sqrl:8081/smartlogin-server/rest/local/check-login";
 		UriBuilder users_UserLogin_uri_template = UriBuilder.fromUri(url);
 		Client client = ClientBuilder.newClient();

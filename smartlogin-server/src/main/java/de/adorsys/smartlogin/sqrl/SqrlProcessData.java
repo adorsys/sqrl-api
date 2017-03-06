@@ -1,8 +1,7 @@
 package de.adorsys.smartlogin.sqrl;
 
-import java.io.Serializable;
-
 import javax.ejb.Stateful;
+import java.io.Serializable;
 
 /**
  * Holder for SQRL process data.

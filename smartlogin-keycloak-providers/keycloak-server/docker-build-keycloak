@@ -1,2 +1,0 @@
-docker build -t sqrl/keycloak:1.0.0-SNAPSHOT -f Dockerfile-keycloak .
-

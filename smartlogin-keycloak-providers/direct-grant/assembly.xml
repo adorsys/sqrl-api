@@ -21,17 +21,4 @@
 			</outputDirectory>
 		</file>
 	</files>
-	<!-- 
-	<dependencySets>
-		<dependencySet>
-			<scope>runtime</scope>
-			<unpack>false</unpack>
-			<useProjectArtifact>false</useProjectArtifact>
-			<useTransitiveDependencies>true</useTransitiveDependencies>
-			<outputDirectory>de/adorsys/smartlogin/direct-grant/main
-			</outputDirectory>
-		</dependencySet>
-	</dependencySets>
-	 -->
-
 </assembly>
